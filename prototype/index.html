@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>DJGABO Karaoke Store - POC</title>
+  <meta name="description" content="Prototipo de tienda digital de karaokes DJGABO">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#">
+      <span class="brand-mark">DJ</span>
+      <span><strong>DJGABO</strong><small>KARAOKE STORE</small></span>
+    </a>
+    <div class="search">
+      <span>⌕</span>
+      <input id="searchInput" type="search" placeholder="Busca canción o artista...">
+    </div>
+    <div class="header-actions">
+      <button class="ghost" id="accountBtn">👤 <span>Mi cuenta</span></button>
+      <button class="cart-btn" id="cartBtn">🛒 <span>Carrito</span><b id="cartCount">0</b></button>
+    </div>
+  </header>
+
+  <nav class="nav">
+    <button class="active" data-filter="Todos">Todos</button>
+    <button data-filter="Cumbia">Cumbia</button>
+    <button data-filter="Andino">Andino</button>
+    <button data-filter="Baladas">Baladas</button>
+    <button data-filter="Top Hits">Top Hits 2026</button>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div>
+        <span class="eyebrow">KARAOKES HD • DESCARGA DIGITAL</span>
+        <h1>Tu karaoke listo para cantar.</h1>
+        <p>Compra, guárdalo en tu cuenta y vuelve a descargarlo cuando quieras.</p>
+        <div class="hero-actions">
+          <button class="primary" id="exploreBtn">Ver karaokes</button>
+          <button class="secondary" id="myKaraokesBtn">Mis Karaokes</button>
+        </div>
+      </div>
+      <div class="hero-card">
+        <span class="hero-badge">NUEVO</span>
+        <div class="hero-disc">♪</div>
+        <strong>TOP HITS 2026</strong>
+        <small>Karaokes nuevos cada semana</small>
+      </div>
+    </section>
+
+    <section class="section" id="catalog">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow dark">CATÁLOGO DJGABO</span>
+          <h2>Karaokes destacados</h2>
+        </div>
+        <span class="count" id="resultCount">0 karaokes</span>
+      </div>
+      <div class="grid" id="productGrid"></div>
+    </section>
+
+    <section class="trust-strip">
+      <div><b>⬇</b><span><strong>Descarga inmediata</strong><small>Después de confirmar tu compra</small></span></div>
+      <div><b>🔒</b><span><strong>Cuenta privada</strong><small>Tus compras quedan guardadas</small></span></div>
+      <div><b>↻</b><span><strong>Vuelve a descargar</strong><small>Desde Mis Karaokes</small></span></div>
+    </section>
+  </main>
+
+  <div class="player" id="player" hidden>
+    <div class="mini-cover" id="playerCover">♪</div>
+    <div class="player-info"><small>REPRODUCIENDO DEMO</small><strong id="playerTitle">Karaoke</strong><span id="playerArtist">DJGABO</span></div>
+    <div class="fake-progress"><i></i></div>
+    <button id="closePlayer">×</button>
+  </div>
+
+  <div class="backdrop" id="backdrop" hidden></div>
+
+  <aside class="drawer" id="cartDrawer" aria-hidden="true">
+    <div class="drawer-head"><div><small>TU COMPRA</small><h3>Carrito</h3></div><button data-close>×</button></div>
+    <div class="drawer-body" id="cartItems"></div>
+    <div class="drawer-footer">
+      <div class="total"><span>Total</span><strong id="cartTotal">S/0.00</strong></div>
+      <button class="primary wide" id="checkoutBtn">Continuar compra</button>
+      <small>POC: el pago todavía es simulado.</small>
+    </div>
+  </aside>
+
+  <aside class="drawer" id="accountDrawer" aria-hidden="true">
+    <div class="drawer-head"><div><small>CLIENTE DJGABO</small><h3>Mi cuenta</h3></div><button data-close>×</button></div>
+    <div class="account-card">
+      <div class="avatar">G</div>
+      <div><strong>Cuenta de prueba</strong><span>demo@djgabo.test</span></div>
+    </div>
+    <div class="account-menu">
+      <button class="active">🎤 <span><strong>Mis Karaokes</strong><small>Productos comprados</small></span></button>
+      <button>🧾 <span><strong>Historial</strong><small>Pedidos anteriores</small></span></button>
+      <button>⚙️ <span><strong>Mi perfil</strong><small>Datos de la cuenta</small></span></button>
+    </div>
+    <div class="library">
+      <div class="empty-library">
+        <span>🎵</span>
+        <strong>Aún no tienes karaokes</strong>
+        <p>Cuando completes una compra, aparecerá aquí para descargar.</p>
+      </div>
+    </div>
+  </aside>
+
+  <div class="modal" id="checkoutModal" hidden>
+    <button class="modal-close" id="closeCheckout">×</button>
+    <span class="success-icon">✓</span>
+    <small>COMPRA DE PRUEBA</small>
+    <h3>El flujo está preparado</h3>
+    <p>El siguiente paso será conectar esta pantalla con Medusa para crear el pedido real de prueba y habilitar el MP4 en <b>Mis Karaokes</b>.</p>
+    <button class="primary wide" id="openAccountAfter">Ir a Mi Cuenta</button>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

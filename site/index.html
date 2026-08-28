@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0d1117">
+  <title>DJGABO Karaoke Store — Demo</title>
+  <meta name="description" content="Prototipo de tienda digital de karaokes DJGABO.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/styles.css">
+</head>
+<body>
+  <div class="demo-ribbon">DEMO DE DESARROLLO · SIN PAGOS REALES</div>
+
+  <header class="topbar">
+    <a class="brand" href="#inicio" aria-label="DJGABO Karaoke Store">
+      <span class="brand-icon">DJ</span>
+      <span class="brand-copy"><strong>DJGABO</strong><small>KARAOKE STORE</small></span>
+    </a>
+
+    <label class="search-box" for="globalSearch">
+      <span class="search-icon">⌕</span>
+      <input id="globalSearch" type="search" placeholder="Busca canción o artista..." autocomplete="off">
+      <button id="clearSearch" class="clear-search" type="button" aria-label="Limpiar búsqueda">×</button>
+    </label>
+
+    <div class="header-actions">
+      <button class="icon-action" id="accountButton" type="button">
+        <span>👤</span><b>Mi cuenta</b>
+      </button>
+      <button class="cart-action" id="cartButton" type="button">
+        <span>🛒</span><b>Carrito</b><em id="cartBadge">0</em>
+      </button>
+    </div>
+  </header>
+
+  <nav class="category-nav" aria-label="Categorías">
+    <button class="category active" data-category="Todos">Todos</button>
+    <button class="category" data-category="Top Hits">🔥 Top Hits 2026</button>
+    <button class="category" data-category="Cumbia">Cumbia</button>
+    <button class="category" data-category="Balada">Baladas</button>
+    <button class="category" data-category="Salsa">Salsa</button>
+    <button class="category" data-category="Andino">Andino</button>
+  </nav>
+
+  <main id="inicio">
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="hero-kicker">KARAOKES HD · DESCARGA DIGITAL</span>
+        <h1>Compra tu karaoke.<br><span>Guárdalo para siempre.</span></h1>
+        <p>Escucha el demo, compra y encuentra todos tus karaokes en una cuenta privada para volver a descargarlos cuando quieras.</p>
+        <div class="hero-buttons">
+          <button class="btn btn-primary" id="browseButton" type="button">Ver karaokes</button>
+          <button class="btn btn-light" id="heroAccountButton" type="button">Ver Mis Karaokes</button>
+        </div>
+        <div class="hero-stats">
+          <div><strong>HD</strong><small>Video MP4</small></div>
+          <div><strong>24/7</strong><small>Tu biblioteca</small></div>
+          <div><strong>∞</strong><small>Re-descargas*</small></div>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="album-stack album-back"></div>
+        <div class="album-stack album-mid"></div>
+        <div class="album-stack album-front">
+          <div class="album-art">
+            <span class="microphone">🎤</span>
+            <i>TOP HITS</i>
+            <b>2026</b>
+          </div>
+          <div class="album-info"><strong>Karaoke DJGABO</strong><small>Edición HD</small></div>
+        </div>
+        <div class="floating-note note-a">♪</div>
+        <div class="floating-note note-b">♫</div>
+      </div>
+    </section>
+
+    <section class="benefits">
+      <article><span>⚡</span><div><strong>Entrega automática</strong><small>Después de confirmar el pago.</small></div></article>
+      <article><span>🔐</span><div><strong>Biblioteca privada</strong><small>Solo ves lo que compraste.</small></div></article>
+      <article><span>⬇️</span><div><strong>Descarga cuando quieras</strong><small>Desde “Mis Karaokes”.</small></div></article>
+    </section>
+
+    <section class="store-section" id="catalogo">
+      <div class="section-title-row">
+        <div>
+          <span class="section-kicker">NUEVOS INGRESOS</span>
+          <h2>Recién agregados</h2>
+        </div>
+        <button class="text-button" id="showAllButton" type="button">Ver todo →</button>
+      </div>
+      <div class="horizontal-products" id="newProducts"></div>
+    </section>
+
+    <section class="promo-banner">
+      <div class="promo-copy">
+        <span>🎁 PROMO DE LANZAMIENTO</span>
+        <h2>Arma tu biblioteca de karaoke.</h2>
+        <p>Este espacio servirá para promociones, packs o descuentos por cantidad.</p>
+      </div>
+      <button class="btn btn-light" id="promoButton" type="button">Explorar catálogo</button>
+    </section>
+
+    <section class="store-section">
+      <div class="section-title-row catalog-heading">
+        <div>
+          <span class="section-kicker">CATÁLOGO DJGABO</span>
+          <h2 id="catalogTitle">Todos los karaokes</h2>
+        </div>
+        <span class="results-count" id="resultsCount">0 resultados</span>
+      </div>
+
+      <div class="filter-line">
+        <div class="filter-pills">
+          <button class="filter-pill active" data-filter="Todos">Todos</button>
+          <button class="filter-pill" data-filter="Con coros">Con coros</button>
+          <button class="filter-pill" data-filter="Sin coros">Sin coros</button>
+        </div>
+        <select id="sortSelect" aria-label="Ordenar catálogo">
+          <option value="featured">Destacados</option>
+          <option value="newest">Más nuevos</option>
+          <option value="az">Título A–Z</option>
+          <option value="price">Menor precio</option>
+        </select>
+      </div>
+
+      <div class="product-grid" id="productGrid"></div>
+      <div class="empty-state" id="emptyState" hidden>
+        <span>🎤</span>
+        <h3>No encontramos ese karaoke</h3>
+        <p>Prueba con otro título, artista o categoría.</p>
+        <button class="btn btn-dark" id="resetSearch" type="button">Limpiar búsqueda</button>
+      </div>
+    </section>
+
+    <section class="how-it-works">
+      <div class="section-title-row">
+        <div><span class="section-kicker">SIMPLE Y DIRECTO</span><h2>¿Cómo funciona?</h2></div>
+      </div>
+      <div class="steps">
+        <article><b>1</b><span>🎧</span><h3>Escucha</h3><p>Prueba el demo antes de comprar.</p></article>
+        <article><b>2</b><span>🛒</span><h3>Compra</h3><p>Agrega tus karaokes al carrito.</p></article>
+        <article><b>3</b><span>👤</span><h3>Se guarda</h3><p>La compra queda en tu cuenta.</p></article>
+        <article><b>4</b><span>⬇️</span><h3>Descarga</h3><p>Entra a “Mis Karaokes” cuando quieras.</p></article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-brand"><span class="brand-icon">DJ</span><div><strong>DJGABO Karaoke Store</strong><small>Prototipo de desarrollo</small></div></div>
+    <p>Esta versión es solo una prueba visual. No procesa pagos ni entrega archivos reales.</p>
+  </footer>
+
+  <div class="bottom-player" id="demoPlayer" hidden>
+    <div class="player-cover" id="playerCover">🎤</div>
+    <div class="player-copy"><small>ESCUCHANDO DEMO</small><strong id="playerSong">Karaoke</strong><span id="playerArtist">DJGABO</span></div>
+    <button class="play-toggle" id="playerToggle" type="button">❚❚</button>
+    <div class="progress"><i id="playerProgress"></i></div>
+    <span class="player-time" id="playerTime">0:18 / 1:00</span>
+    <button class="close-player" id="closePlayer" type="button">×</button>
+  </div>
+
+  <div class="overlay" id="overlay" hidden></div>
+
+  <aside class="drawer" id="cartDrawer" aria-hidden="true">
+    <div class="drawer-head">
+      <div><small>TU COMPRA</small><h2>Carrito</h2></div>
+      <button class="circle-close" data-close-drawer type="button">×</button>
+    </div>
+    <div class="cart-scroll" id="cartItems"></div>
+    <div class="drawer-footer" id="cartFooter">
+      <div class="price-line"><span>Subtotal</span><strong id="cartSubtotal">S/0.00</strong></div>
+      <div class="price-line total-line"><span>Total</span><strong id="cartTotal">S/0.00</strong></div>
+      <button class="btn btn-primary full" id="checkoutButton" type="button">Continuar compra</button>
+      <small>Pago simulado en esta versión.</small>
+    </div>
+  </aside>
+
+  <aside class="drawer account-drawer" id="accountDrawer" aria-hidden="true">
+    <div class="drawer-head">
+      <div><small>CLIENTE DJGABO</small><h2>Mi cuenta</h2></div>
+      <button class="circle-close" data-close-drawer type="button">×</button>
+    </div>
+
+    <div id="accountLoggedOut" class="account-logged-out">
+      <div class="account-hero-icon">👤</div>
+      <h3>Tu biblioteca empieza aquí</h3>
+      <p>Inicia sesión para ver tus compras y descargar nuevamente tus karaokes.</p>
+      <button class="btn btn-dark full" id="loginFromAccount" type="button">Iniciar sesión</button>
+      <button class="link-button" id="registerFromAccount" type="button">Crear una cuenta</button>
+    </div>
+
+    <div id="accountLoggedIn" hidden>
+      <div class="customer-card">
+        <span class="customer-avatar">A</span>
+        <div><small>SESIÓN DE PRUEBA</small><strong>Augusto Demo</strong><span>cliente@demo.local</span></div>
+        <button id="logoutButton" type="button">Salir</button>
+      </div>
+
+      <div class="account-tabs">
+        <button class="active" data-account-tab="library">🎤 Mis Karaokes</button>
+        <button data-account-tab="orders">🧾 Historial</button>
+        <button data-account-tab="profile">⚙️ Perfil</button>
+      </div>
+
+      <div class="account-panel" id="libraryPanel">
+        <div class="panel-heading"><div><small>TU BIBLIOTECA</small><h3>Mis Karaokes</h3></div><span>2 comprados</span></div>
+        <div id="libraryItems"></div>
+      </div>
+
+      <div class="account-panel" id="ordersPanel" hidden>
+        <div class="panel-heading"><div><small>PEDIDOS</small><h3>Historial</h3></div></div>
+        <article class="order-card"><div><strong>Pedido #DEMO-002</strong><span>28 ago 2026 · 1 karaoke</span></div><b>S/5.00</b></article>
+        <article class="order-card"><div><strong>Pedido #DEMO-001</strong><span>25 ago 2026 · 1 karaoke</span></div><b>S/5.00</b></article>
+      </div>
+
+      <div class="account-panel" id="profilePanel" hidden>
+        <div class="panel-heading"><div><small>CUENTA</small><h3>Mi perfil</h3></div></div>
+        <div class="profile-field"><span>Nombre</span><strong>Augusto Demo</strong></div>
+        <div class="profile-field"><span>Email</span><strong>cliente@demo.local</strong></div>
+        <div class="profile-field"><span>Estado</span><strong>Cuenta activa</strong></div>
+      </div>
+    </div>
+  </aside>
+
+  <section class="modal product-modal" id="productModal" hidden>
+    <button class="circle-close modal-close" data-close-modal type="button">×</button>
+    <div class="modal-cover" id="modalCover"><span>🎤</span><button id="modalDemoButton" type="button">▶ ESCUCHAR DEMO</button></div>
+    <div class="modal-content">
+      <div class="modal-badges" id="modalBadges"></div>
+      <h2 id="modalTitle">Título</h2>
+      <p class="modal-artist" id="modalArtist">Artista</p>
+      <div class="format-box"><span>Formato</span><strong>MP4 · 1280×720 HD</strong></div>
+      <div class="modal-price-row"><div><small>PRECIO</small><strong id="modalPrice">S/5.00</strong></div><button class="btn btn-primary" id="modalAddButton" type="button">Agregar al carrito</button></div>
+      <p class="protection-note">🔐 Después de la compra aparecerá automáticamente en <b>Mi Cuenta → Mis Karaokes</b>.</p>
+    </div>
+  </section>
+
+  <section class="modal auth-modal" id="authModal" hidden>
+    <button class="circle-close modal-close" data-close-modal type="button">×</button>
+    <div class="auth-header"><span class="brand-icon">DJ</span><small>DJGABO KARAOKE STORE</small><h2 id="authTitle">Iniciar sesión</h2><p id="authSubtitle">Accede a tus compras y descargas.</p></div>
+    <div class="auth-tabs"><button class="active" data-auth-mode="login">Ingresar</button><button data-auth-mode="register">Crear cuenta</button></div>
+    <form id="authForm">
+      <label id="nameField" hidden>Nombre completo<input type="text" placeholder="Tu nombre"></label>
+      <label>Correo electrónico<input type="email" placeholder="correo@ejemplo.com" required></label>
+      <label>Contraseña<input type="password" placeholder="••••••••" required></label>
+      <button class="btn btn-dark full" id="authSubmit" type="submit">Ingresar</button>
+    </form>
+    <small class="auth-demo-note">Demo: cualquier correo y contraseña permiten entrar. No se guardan datos.</small>
+  </section>
+
+  <section class="modal checkout-modal" id="checkoutModal" hidden>
+    <button class="circle-close modal-close" data-close-modal type="button">×</button>
+    <span class="checkout-icon">✓</span>
+    <small>CHECKOUT DE PRUEBA</small>
+    <h2>El carrito está listo.</h2>
+    <p>En la siguiente fase esta pantalla se conectará con Medusa. Por ahora simularemos la compra para comprobar la experiencia.</p>
+    <button class="btn btn-primary full" id="simulatePurchase" type="button">Simular compra aprobada</button>
+  </section>
+
+  <section class="modal success-modal" id="successModal" hidden>
+    <span class="checkout-icon">✓</span>
+    <small>COMPRA APROBADA · DEMO</small>
+    <h2>¡Karaoke agregado!</h2>
+    <p>En el sistema real, aquí el producto ya quedaría habilitado en tu cuenta.</p>
+    <button class="btn btn-dark full" id="goToLibrary" type="button">Ver Mis Karaokes</button>
+  </section>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="./assets/app.js"></script>
+</body>
+</html>

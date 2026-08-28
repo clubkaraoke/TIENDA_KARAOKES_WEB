@@ -9,12 +9,12 @@ const state={
   selected:null,
   playerTimer:null,
   playerPct:30,
-  library:["krk-003","krk-007"]
+  library:[]
 };
 
 const $=(s,root=document)=>root.querySelector(s);
 const $$=(s,root=document)=>[...root.querySelectorAll(s)];
-const money=n=>"S/"+Number(n).toFixed(2);
+const money=n=>"S/"+Number(n).toFixed(2);\nconst STORAGE_KEY="djgabo-karaoke-demo-v1";\n\nfunction loadPersisted(){\n  try{\n    const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}");\n    state.loggedIn=Boolean(saved.loggedIn);\n    state.library=Array.isArray(saved.library)?saved.library:[];\n  }catch(e){\n    state.loggedIn=false;\n    state.library=[];\n  }\n}\n\nfunction persistState(){\n  localStorage.setItem(STORAGE_KEY,JSON.stringify({loggedIn:state.loggedIn,library:state.library}));\n}
 
 const palette=[
   ["#25324a","#6d56ff"],["#342650","#a35def"],["#17384a","#3d9fc5"],

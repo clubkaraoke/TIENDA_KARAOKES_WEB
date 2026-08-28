@@ -1,0 +1,112 @@
+[
+  {
+    "id": "krk-001",
+    "artista": "Grupo 5",
+    "titulo": "Motor y Motivo",
+    "genero": "Cumbia",
+    "coros": true,
+    "precio": 5,
+    "nuevo": true,
+    "top": true,
+    "colorIndex": 0
+  },
+  {
+    "id": "krk-002",
+    "artista": "Corazón Serrano",
+    "titulo": "Mix de Prueba",
+    "genero": "Cumbia",
+    "coros": true,
+    "precio": 5,
+    "nuevo": true,
+    "top": true,
+    "colorIndex": 1
+  },
+  {
+    "id": "krk-003",
+    "artista": "Agua Marina",
+    "titulo": "Paloma Ajena",
+    "genero": "Cumbia",
+    "coros": false,
+    "precio": 5,
+    "nuevo": false,
+    "top": true,
+    "colorIndex": 2
+  },
+  {
+    "id": "krk-004",
+    "artista": "Kjarkas",
+    "titulo": "Saya de Prueba",
+    "genero": "Andino",
+    "coros": true,
+    "precio": 5,
+    "nuevo": true,
+    "top": false,
+    "colorIndex": 3
+  },
+  {
+    "id": "krk-005",
+    "artista": "Eva Ayllón",
+    "titulo": "Demo Criollo",
+    "genero": "Balada",
+    "coros": false,
+    "precio": 5,
+    "nuevo": false,
+    "top": false,
+    "colorIndex": 4
+  },
+  {
+    "id": "krk-006",
+    "artista": "Gilberto Santa Rosa",
+    "titulo": "Karaoke Salsa Demo",
+    "genero": "Salsa",
+    "coros": true,
+    "precio": 5,
+    "nuevo": true,
+    "top": true,
+    "colorIndex": 5
+  },
+  {
+    "id": "krk-007",
+    "artista": "Luis Miguel",
+    "titulo": "Romántica Demo",
+    "genero": "Balada",
+    "coros": false,
+    "precio": 5,
+    "nuevo": false,
+    "top": true,
+    "colorIndex": 6
+  },
+  {
+    "id": "krk-008",
+    "artista": "Armonía 10",
+    "titulo": "Cumbia de Prueba",
+    "genero": "Cumbia",
+    "coros": true,
+    "precio": 5,
+    "nuevo": true,
+    "top": false,
+    "colorIndex": 7
+  },
+  {
+    "id": "krk-009",
+    "artista": "Grupo Niche",
+    "titulo": "Salsa Demo 2",
+    "genero": "Salsa",
+    "coros": false,
+    "precio": 5,
+    "nuevo": false,
+    "top": false,
+    "colorIndex": 8
+  },
+  {
+    "id": "krk-010",
+    "artista": "Amaranta",
+    "titulo": "Andino Demo",
+    "genero": "Andino",
+    "coros": true,
+    "precio": 5,
+    "nuevo": true,
+    "top": true,
+    "colorIndex": 9
+  }
+]

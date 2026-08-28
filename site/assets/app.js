@@ -14,7 +14,8 @@ const state={
 
 const $=(s,root=document)=>root.querySelector(s);
 const $$=(s,root=document)=>[...root.querySelectorAll(s)];
-const money=n=>"S/"+Number(n).toFixed(2);\nconst STORAGE_KEY="djgabo-karaoke-demo-v1";\n\nfunction loadPersisted(){\n  try{\n    const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}");\n    state.loggedIn=Boolean(saved.loggedIn);\n    state.library=Array.isArray(saved.library)?saved.library:[];\n  }catch(e){\n    state.loggedIn=false;\n    state.library=[];\n  }\n}\n\nfunction persistState(){\n  localStorage.setItem(STORAGE_KEY,JSON.stringify({loggedIn:state.loggedIn,library:state.library}));\n}
+const money=n=>"S/"+Number(n).toFixed(2);
+const STORAGE_KEY="djgabo-karaoke-demo-v1";
 
 const palette=[
   ["#25324a","#6d56ff"],["#342650","#a35def"],["#17384a","#3d9fc5"],
@@ -22,7 +23,26 @@ const palette=[
   ["#2b2f48","#6574d8"],["#40264a","#b259bd"],["#263d46","#4eb8b8"],["#3c2d42","#a967a2"]
 ];
 
+function loadPersisted(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}");
+    state.loggedIn=Boolean(saved.loggedIn);
+    state.library=Array.isArray(saved.library)?saved.library:[];
+  }catch{
+    state.loggedIn=false;
+    state.library=[];
+  }
+}
+
+function persistState(){
+  localStorage.setItem(STORAGE_KEY,JSON.stringify({
+    loggedIn:state.loggedIn,
+    library:state.library
+  }));
+}
+
 async function init(){
+  loadPersisted();
   try{
     state.products=await fetch("./data/karaokes.json",{cache:"no-store"}).then(r=>{
       if(!r.ok) throw new Error("No se pudo cargar el catálogo");
@@ -30,11 +50,12 @@ async function init(){
     });
   }catch(err){
     console.error(err);
-    showToast("No se pudo cargar el catálogo demo");
     state.products=[];
+    showToast("No se pudo cargar el catálogo demo");
   }
   renderAll();
   bindStaticEvents();
+  updateAuthState();
 }
 
 function renderAll(){
@@ -45,7 +66,7 @@ function renderAll(){
 }
 
 function productColors(p){
-  return palette[(p.colorIndex ?? 0)%palette.length];
+  return palette[(p.colorIndex??0)%palette.length];
 }
 
 function cardMarkup(p){
@@ -96,8 +117,7 @@ function visibleProducts(){
 }
 
 function renderNew(){
-  const list=state.products.filter(p=>p.nuevo).slice(0,6);
-  $("#newProducts").innerHTML=list.map(cardMarkup).join("");
+  $("#newProducts").innerHTML=state.products.filter(p=>p.nuevo).slice(0,6).map(cardMarkup).join("");
 }
 
 function renderCatalog(){
@@ -106,7 +126,6 @@ function renderCatalog(){
   $("#resultsCount").textContent=`${list.length} ${list.length===1?"resultado":"resultados"}`;
   $("#emptyState").hidden=list.length>0;
   $("#productGrid").hidden=list.length===0;
-
   let title="Todos los karaokes";
   if(state.search) title=`Resultados para “${state.search}”`;
   else if(state.category!=="Todos") title=state.category==="Top Hits"?"Top Hits 2026":state.category;
@@ -130,13 +149,11 @@ function renderCart(){
   $("#cartSubtotal").textContent=money(total);
   $("#cartTotal").textContent=money(total);
   $("#checkoutButton").disabled=!state.cart.length;
-  renderNew();
-  renderCatalog();
 }
 
 function renderAccountLibrary(){
   const products=state.library.map(id=>state.products.find(p=>p.id===id)).filter(Boolean);
-  $("#libraryItems").innerHTML=products.map(p=>`
+  $("#libraryItems").innerHTML=products.length?products.map(p=>`
     <div class="library-item">
       <div class="library-thumb">🎤</div>
       <div class="library-copy">
@@ -145,8 +162,8 @@ function renderAccountLibrary(){
         <small>✓ COMPRA VERIFICADA</small>
       </div>
       <button class="download-button" type="button" data-download="${p.id}">⬇ DESCARGAR</button>
-    </div>`).join("");
-  const count=$(".panel-heading>span");
+    </div>`).join(""):'<div class="empty-cart"><span>🎵</span><h3>Aún no tienes karaokes</h3><p>Haz una compra de prueba y aparecerá aquí.</p></div>';
+  const count=$("#libraryPanel .panel-heading>span");
   if(count) count.textContent=`${products.length} comprados`;
 }
 
@@ -165,10 +182,7 @@ function bindStaticEvents(){
     if(remove){removeFromCart(remove.dataset.remove);return}
 
     const download=e.target.closest("[data-download]");
-    if(download){
-      showToast("Demo: aquí se generará el enlace privado del MP4");
-      return;
-    }
+    if(download){downloadDemo(download.dataset.download);return}
 
     if(e.target.closest("[data-close-drawer]")) closeDrawers();
     if(e.target.closest("[data-close-modal]")) closeModals();
@@ -177,7 +191,6 @@ function bindStaticEvents(){
   $("#globalSearch").addEventListener("input",e=>{
     state.search=e.target.value.trim();
     renderCatalog();
-    if(state.search) $("#catalogo").scrollIntoView({behavior:"smooth",block:"start"});
   });
   $("#clearSearch").addEventListener("click",resetSearch);
   $("#resetSearch").addEventListener("click",resetSearch);
@@ -201,10 +214,12 @@ function bindStaticEvents(){
   $("#browseButton").addEventListener("click",()=>$("#catalogo").scrollIntoView({behavior:"smooth"}));
   $("#promoButton").addEventListener("click",()=>$("#catalogo").scrollIntoView({behavior:"smooth"}));
   $("#showAllButton").addEventListener("click",()=>{
-    state.category="Todos";state.search="";
+    state.category="Todos";
+    state.search="";
     $("#globalSearch").value="";
     $$(".category").forEach((x,i)=>x.classList.toggle("active",i===0));
-    renderCatalog();$("#catalogo").scrollIntoView({behavior:"smooth"});
+    renderCatalog();
+    $("#catalogo").scrollIntoView({behavior:"smooth"});
   });
 
   $("#cartButton").addEventListener("click",()=>openDrawer("#cartDrawer"));
@@ -214,8 +229,10 @@ function bindStaticEvents(){
 
   $("#loginFromAccount").addEventListener("click",()=>openAuth("login"));
   $("#registerFromAccount").addEventListener("click",()=>openAuth("register"));
+
   $("#logoutButton").addEventListener("click",()=>{
     state.loggedIn=false;
+    persistState();
     updateAuthState();
     showToast("Sesión demo cerrada");
   });
@@ -226,6 +243,7 @@ function bindStaticEvents(){
   $("#authForm").addEventListener("submit",e=>{
     e.preventDefault();
     state.loggedIn=true;
+    persistState();
     closeModals();
     updateAuthState();
     openDrawer("#accountDrawer");
@@ -233,14 +251,20 @@ function bindStaticEvents(){
   });
 
   $("#checkoutButton").addEventListener("click",()=>{
+    if(!state.cart.length){showToast("Agrega un karaoke primero");return}
     closeDrawers();
-    if(!state.loggedIn){openAuth("login");showToast("Primero inicia sesión para continuar");return}
+    if(!state.loggedIn){
+      openAuth("login");
+      showToast("Primero inicia sesión para continuar");
+      return;
+    }
     openModal("#checkoutModal");
   });
 
   $("#simulatePurchase").addEventListener("click",()=>{
     state.cart.forEach(p=>{if(!state.library.includes(p.id))state.library.unshift(p.id)});
     state.cart=[];
+    persistState();
     renderAll();
     closeModals();
     openModal("#successModal");
@@ -269,8 +293,6 @@ function openProduct(id){
   if(!p)return;
   state.selected=p;
   const [a,b]=productColors(p);
-  $("#productModal").style.setProperty("--modalA",a);
-  $("#productModal").style.setProperty("--modalB",b);
   $("#modalCover").style.setProperty("--modalA",a);
   $("#modalCover").style.setProperty("--modalB",b);
   $("#modalTitle").textContent=p.titulo;
@@ -286,13 +308,33 @@ function addToCart(id){
   if(!p)return;
   if(state.cart.some(x=>x.id===id)){showToast("Ese karaoke ya está en tu carrito");return}
   state.cart.push(p);
-  renderCart();
+  renderAll();
   showToast(`${p.titulo} agregado al carrito`);
 }
 
 function removeFromCart(id){
   state.cart=state.cart.filter(p=>p.id!==id);
-  renderCart();
+  renderAll();
+}
+
+function downloadDemo(id){
+  const p=state.products.find(x=>x.id===id);
+  if(!p||!state.library.includes(id)){showToast("Compra no verificada");return}
+  const blob=new Blob([
+    "DJGABO KARAOKE STORE - ARCHIVO DEMO\n\n"+
+    "Karaoke: "+p.titulo+"\n"+
+    "Artista: "+p.artista+"\n\n"+
+    "En producción este botón entregará el MP4 privado comprado."
+  ],{type:"text/plain;charset=utf-8"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download=p.artista+" - "+p.titulo+" DEMO.txt";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  showToast("Descarga demo iniciada");
 }
 
 function openDrawer(selector){
@@ -302,7 +344,10 @@ function openDrawer(selector){
   el.classList.add("open");
   el.setAttribute("aria-hidden","false");
   $("#overlay").hidden=false;
-  if(selector==="#accountDrawer") updateAuthState();
+  if(selector==="#accountDrawer"){
+    updateAuthState();
+    renderAccountLibrary();
+  }
 }
 
 function closeDrawers(hideOverlay=true){
@@ -370,7 +415,9 @@ function playDemo(id){
 
 function togglePlayer(){
   if(state.playerTimer){
-    clearInterval(state.playerTimer);state.playerTimer=null;$("#playerToggle").textContent="▶";
+    clearInterval(state.playerTimer);
+    state.playerTimer=null;
+    $("#playerToggle").textContent="▶";
   }else{
     $("#playerToggle").textContent="❚❚";
     state.playerTimer=setInterval(()=>{
@@ -395,7 +442,8 @@ function resetSearch(){
 let toastTimer;
 function showToast(msg){
   const el=$("#toast");
-  el.textContent=msg;el.hidden=false;
+  el.textContent=msg;
+  el.hidden=false;
   clearTimeout(toastTimer);
   toastTimer=setTimeout(()=>el.hidden=true,2300);
 }

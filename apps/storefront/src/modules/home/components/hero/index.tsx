@@ -1,31 +1,36 @@
-import { Github } from "@medusajs/icons";
-import { Button, Heading } from "@modules/common/components/ui";
+import { Button, Heading } from "@modules/common/components/ui"
+
 const Hero = () => {
   return (
-    <div className="h-[75vh] w-full border-b border-ui-border-base relative bg-ui-bg-subtle">
-      <div className="absolute inset-0 z-10 flex flex-col justify-center items-center text-center small:p-32 gap-6">
-        <span>
+    <section className="relative overflow-hidden border-b border-ui-border-base bg-[#160b2d] text-white">
+      <div className="content-container flex min-h-[420px] flex-col items-start justify-center gap-6 py-16 small:min-h-[520px] small:py-24">
+        <div className="max-w-3xl">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.24em] text-purple-200">
+            Club Karaoke DJGABO
+          </p>
           <Heading
             level="h1"
-            className="text-3xl leading-10 text-ui-fg-base font-normal"
+            className="text-4xl font-semibold leading-tight text-white small:text-6xl"
           >
-            Ecommerce Starter Template
+            Tu karaoke listo para cantar y descargar
           </Heading>
-          <Heading
-            level="h2"
-            className="text-3xl leading-10 text-ui-fg-subtle font-normal"
-          >
-            Powered by Medusa and Next.js
-          </Heading>
-        </span>
-        <a href="https://github.com/medusajs/dtc-starter" target="_blank">
-          <Button variant="secondary">
-            View on GitHub <Github />
-          </Button>
-        </a>
-      </div>
-    </div>
-  );
-};
+          <p className="mt-5 max-w-2xl text-base leading-7 text-purple-100 small:text-lg">
+            Busca tu canción, escucha la demo y agrégala a tu cuenta. Cuando el MP4 esté listo,
+            quedará disponible en Mis Karaokes.
+          </p>
+        </div>
 
-export default Hero;
+        <div className="flex flex-wrap gap-3">
+          <a href="#catalogo-karaoke">
+            <Button>Ver karaokes</Button>
+          </a>
+          <a href="/account">
+            <Button variant="secondary">Mi cuenta</Button>
+          </a>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+export default Hero

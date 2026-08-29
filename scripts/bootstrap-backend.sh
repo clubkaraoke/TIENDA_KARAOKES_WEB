@@ -10,19 +10,21 @@ TMP_DIR="$(mktemp -d)"
 cleanup() { rm -rf "$TMP_DIR"; }
 trap cleanup EXIT
 
-echo "[DJGABO] Descargando Medusa Digital Product..."
+if [ -f "$BACKEND_DIR/package.json" ] && [ "${DJGABO_FORCE_BOOTSTRAP:-0}" != "1" ]; then
+  echo "[DJGABO] apps/backend ya existe. No se sobrescribe."
+  echo "[DJGABO] Usa DJGABO_FORCE_BOOTSTRAP=1 solo si deseas regenerarlo."
+  exit 0
+fi
+
+echo "[DJGABO] Descargando Medusa Digital Product oficial..."
 git clone --quiet "$UPSTREAM_REPO" "$TMP_DIR/examples"
 git -C "$TMP_DIR/examples" checkout --quiet "$UPSTREAM_COMMIT"
 
+rm -rf "$BACKEND_DIR"
 mkdir -p "$BACKEND_DIR"
-
-# Conserva archivos propios del POC y trae el backend oficial.
 cp -R "$TMP_DIR/examples/digital-product/." "$BACKEND_DIR/"
-
-# Nunca copiar un .env real desde upstream.
 rm -f "$BACKEND_DIR/.env"
 
-# Nombre propio del proyecto.
 node - "$BACKEND_DIR/package.json" <<'NODE'
 const fs = require("fs")
 const path = process.argv[2]
@@ -33,16 +35,13 @@ fs.writeFileSync(path, JSON.stringify(pkg, null, 2) + "\n")
 NODE
 
 cat > "$BACKEND_DIR/UPSTREAM.md" <<EOF
-# Upstream Medusa
-
-Este backend parte del ejemplo oficial:
+# Upstream Medusa Digital Product
 
 - Repositorio: medusajs/examples
 - Ruta: digital-product
 - Commit fijado: $UPSTREAM_COMMIT
 
-Se adapta para el POC de tienda digital de karaokes DJGABO.
+Base oficial usada para productos digitales, preview, pedidos y descargas protegidas.
 EOF
 
 echo "[DJGABO] Backend preparado en: $BACKEND_DIR"
-echo "[DJGABO] Siguiente: configurar .env, PostgreSQL e instalar dependencias."

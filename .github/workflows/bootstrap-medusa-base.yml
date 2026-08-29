@@ -1,0 +1,48 @@
+name: Bootstrap Medusa base
+
+on:
+  push:
+    branches:
+      - medusa-base
+    paths:
+      - "scripts/bootstrap-backend.sh"
+      - "scripts/bootstrap-storefront.sh"
+      - ".github/workflows/bootstrap-medusa-base.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  bootstrap:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout medusa-base
+        uses: actions/checkout@v4
+        with:
+          ref: medusa-base
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.19.0"
+
+      - name: Import official Medusa bases
+        run: |
+          bash scripts/bootstrap-backend.sh
+          bash scripts/bootstrap-storefront.sh
+
+      - name: Commit imported apps
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/backend apps/storefront
+          if git diff --cached --quiet; then
+            echo "No hay cambios que guardar."
+            exit 0
+          fi
+          git commit -m "chore: importar Medusa Digital Product + DTC Storefront [skip ci]"
+          git push origin HEAD:medusa-base

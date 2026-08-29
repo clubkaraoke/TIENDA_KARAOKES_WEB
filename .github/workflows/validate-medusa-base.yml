@@ -1,0 +1,40 @@
+name: Validate Medusa base
+
+on:
+  push:
+    branches:
+      - medusa-base
+    paths:
+      - "apps/backend/**"
+      - "apps/storefront/**"
+      - ".github/workflows/validate-medusa-base.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.19.0"
+
+      - name: Backend dependencies
+        working-directory: apps/backend
+        run: npm install --no-audit --no-fund
+
+      - name: Backend build
+        working-directory: apps/backend
+        run: npm run build
+
+      - name: Storefront dependencies
+        working-directory: apps/storefront
+        run: npm install --no-audit --no-fund
+
+      - name: Storefront typecheck
+        working-directory: apps/storefront
+        run: npx tsc --noEmit

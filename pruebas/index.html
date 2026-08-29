@@ -8,8 +8,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <script src="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/js/boot.js"></script>
-<title>Pistas Musicales para Cantantes MP3 y WAV | DJGABO</title>
-<meta name="description" content="Escucha demos, elige tus pistas y realiza tu pedido por WhatsApp.">
+<title>Karaokes MP4 Online | DJGABO</title>
+<meta name="description" content="Busca, escucha demos y compra karaokes MP4 en tu cuenta DJGABO.">
 <meta property="og:locale" content="es_PE">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="DJGABO">
@@ -65,12 +65,13 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/css/experience.css?v=20260725-4">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/css/demo-player-pro.css?v=20260825-2">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/css/final-ui-fixes.css?v=20260825-23">
+<link rel="stylesheet" href="./karaoke-store.css?v=20260829-2">
 </head>
 <body>
 <div class="direct-loading-screen" id="directLoadingScreen" aria-live="polite">
 <div class="direct-loading-card">
 <div class="direct-loading-spinner"></div>
-<strong id="directLoadingTitle">Cargando pista musical...</strong>
+<strong id="directLoadingTitle">Cargando karaoke...</strong>
 <span id="directLoadingText">Preparando demo DJGABO</span>
 </div>
 </div>
@@ -80,14 +81,14 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 <div class="search-cart-row">
 <div class="search-hero" id="searchArea">
 <i class="fa-solid fa-magnifying-glass"></i>
-<input id="q" type="search" placeholder="Busca pista o artista..." autocomplete="off"
-aria-label="Buscar canción o artista">
+<input id="q" type="search" placeholder="Busca karaoke, canción o artista..." autocomplete="off"
+aria-label="Buscar karaoke, canción o artista">
 <button class="clear-btn" id="clearSearchBtn" type="button" aria-label="Limpiarbúsqueda">×</button>
 <div class="search-suggestions" id="searchSuggestions" aria-label="Sugerencias de búsqueda"></div>
 </div>
 <button class="top-cart-btn" id="floatCartBtn" type="button" aria-label="Ver pedido" title="Ver pedido">
 <i class="fa-solid fa-basket-shopping"></i>
-<span class="float-cart-label" id="floatCartLabel">0 pistas</span>
+<span class="float-cart-label" id="floatCartLabel">0 karaokes</span>
 <b class="cart-badge" id="heroCartBadge">0</b>
 </button>
 <button class="client-access-btn" type="button" id="clientAccessTopBtn"
@@ -104,7 +105,7 @@ aria-label="Acceso clientes frecuentes" title="Zona clientes">
 </div>
 <div class="now-playing-info">
 <div class="now-playing-label">Reproduciendo demo</div>
-<div class="now-playing-title" id="nowPlayingTitle">Pista musical</div>
+<div class="now-playing-title" id="nowPlayingTitle">Karaoke</div>
 <div class="now-playing-artist" id="nowPlayingArtist">DJGABO</div>
 </div>
 <button class="now-playing-more" type="button" id="nowPlayingMoreBtn"
@@ -117,9 +118,9 @@ aria-label="Opciones de la pista reproduciendo">
 <div class="premium-card">
 <div class="premium-content">
 <div class="premium-kicker">ACCESO PRIVADO DJGABO</div>
-<div class="premium-title"><span>Listo para tus chivos?</span></div>
-<div class="premium-sub">Accede a más de <span id="catalogCounter" class="catalog-counter">10.000</span> pistas para descargar vía WhatsApp.</div>
-<button class="premium-btn" type="button" id="premiumBtn">Ver Ofertas</button>
+<div class="premium-title"><span>¿Listo para cantar?</span></div>
+<div class="premium-sub">Accede a <span id="catalogCounter" class="catalog-counter">0</span> karaokes de nuestro catálogo DJGABO.</div>
+<button class="premium-btn" type="button" id="premiumBtn">Ver catálogo</button>
 </div>
 <img class="hero-people hero-mobile" src="https://kitkaraoke.com/images/singers.png"
 alt="Cantantes mostrando acceso desde celular" loading="eager" decoding="async"
@@ -133,7 +134,7 @@ aria-hidden="true"></section>
 <section class="section" id="newWrap" style="display:none;">
 <div class="section-head">
 <div>
-<h2 class="section-title">RECIÉN AGREGADOS</h2>
+<h2 class="section-title">KARAOKES RECIÉN AGREGADOS</h2>
 </div>
 <button class="see-all" type="button" id="newSeeAll">Ver todo</button>
 </div>
@@ -142,7 +143,7 @@ aria-hidden="true"></section>
 <section class="section" id="mostRequestedWrap" style="display:none;">
 <div class="section-head">
 <div>
-<h2 class="section-title">DESTACADOS</h2>
+<h2 class="section-title">KARAOKES CON COROS</h2>
 </div>
 <button class="see-all" type="button" id="mostRequestedSeeAll">Ver todo</button>
 </div>
@@ -155,9 +156,9 @@ aria-hidden="true"></section>
 <span id="count">Cargando...</span>
 </div>
 <div class="tabs" aria-label="Filtros del catálogo">
-<button class="tab active" type="button" data-mode="full">LISTADO</button>
-<button class="tab" type="button" data-mode="tops">TOP HITS 2026</button>
-<button class="tab" type="button" data-mode="most">MÁS ELEGIDOS</button>
+<button class="tab active" type="button" data-mode="full">TODOS</button>
+<button class="tab" type="button" data-mode="tops">NUEVOS 2026</button>
+<button class="tab" type="button" data-mode="most">CON COROS</button>
 </div>
 </div>
 <div id="statusBox">Cargando catálogo...</div>
@@ -178,7 +179,7 @@ DJGABO.</span>
 </div>
 </div>
 <button class="mobile-order-bar" id="mobileOrderBar" type="button" aria-label="Ver pedido">
-<span><i class="fa-solid fa-basket-shopping"></i><b id="mobileOrderCount">0 pistas</b></span>
+<span><i class="fa-solid fa-basket-shopping"></i><b id="mobileOrderCount">0 karaokes</b></span>
 <strong>VER PEDIDO <i class="fa-solid fa-arrow-right"></i></strong>
 </button>
 <button class="float-search" id="goSearchBtn" type="button" aria-label="Volver albuscador">
@@ -190,7 +191,7 @@ DJGABO.</span>
 <img id="bottomDemoCover" src="" alt="" loading="lazy" decoding="async">
 </div>
 <div class="bottom-demo-info">
-<div class="bottom-demo-title" id="bottomDemoTitle">Pista musical</div>
+<div class="bottom-demo-title" id="bottomDemoTitle">Karaoke</div>
 <div class="bottom-demo-artist" id="bottomDemoArtist">DJGABO</div>
 <audio id="bottomDemoAudio" controls preload="none"></audio>
 <iframe id="bottomDemoDrive" src="" allow="autoplay; encrypted-media"
@@ -246,7 +247,7 @@ aria-label="Reproducir demo">
 </button>
 <div class="song-modal-hand" id="songModalHand" aria-hidden="true">👆</div>
 </div>
-<h3 class="song-order-title" id="songModalTitle">Pista musical</h3>
+<h3 class="song-order-title" id="songModalTitle">Karaoke</h3>
 <div class="song-order-artist" id="songModalArtist">DJGABO</div>
 <div class="song-order-tags" id="songModalTags"></div>
 <div class="song-variant-picker" id="songVariantPicker" aria-label="Versiones disponibles"></div>
@@ -255,7 +256,7 @@ aria-label="Reproducir demo">
 <div class="song-price-sub" id="songPriceSub">Agrega 1 pista más y lleva 2 por S/25</div>
 </div>
 <div class="song-inline-player" id="songInlinePlayer">
-<strong id="songInlinePlayerTitle">Reproduciendo pista musical</strong>
+<strong id="songInlinePlayerTitle">Reproduciendo karaoke</strong>
 <audio id="songLocalAudio" controls preload="none"></audio>
 <iframe id="songDrivePreview" src="" allow="autoplay"></iframe>
 <div class="song-inline-help" id="songInlineHelp" style="display:none;"></div>
@@ -430,9 +431,9 @@ todo desde <strong>Ver pedido</strong>.
 <div class="package-card"><span>1 pista</span><strong>S/15</strong></div>
 <div class="package-card"><span>2 pistas</span><strong>S/25</strong></div>
 <div class="package-card"><span>5 pistas</span><strong>S/45</strong></div>
-<div class="package-card hot"><span>10 pistas</span><strong>S/55</strong></div>
-<div class="package-card hot"><span>20 pistas</span><strong>S/82</strong></div>
-<div class="package-card hot"><span>30 pistas</span><strong>S/105</strong></div>
+<div class="package-card hot"><span>10 karaokes</span><strong>S/55</strong></div>
+<div class="package-card hot"><span>20 karaokes</span><strong>S/82</strong></div>
+<div class="package-card hot"><span>30 karaokes</span><strong>S/105</strong></div>
 </div>
 <button class="package-toggle" type="button" id="togglePackagesBtn">Ver todos los
 precios</button>
@@ -447,7 +448,7 @@ precios</button>
 <div><span>7 pistas</span><strong>S/47</strong></div>
 <div><span>8 pistas</span><strong>S/48</strong></div>
 <div><span>9 pistas</span><strong>S/49</strong></div>
-<div><span>10 pistas</span><strong>S/55</strong></div>
+<div><span>10 karaokes</span><strong>S/55</strong></div>
 <div><span>11 pistas</span><strong>S/56</strong></div>
 <div><span>12 pistas</span><strong>S/57</strong></div>
 <div><span>13 pistas</span><strong>S/60</strong></div>
@@ -457,7 +458,7 @@ precios</button>
 <div><span>17 pistas</span><strong>S/76</strong></div>
 <div><span>18 pistas</span><strong>S/78</strong></div>
 <div><span>19 pistas</span><strong>S/80</strong></div>
-<div><span>20 pistas</span><strong>S/82</strong></div>
+<div><span>20 karaokes</span><strong>S/82</strong></div>
 <div><span>21 pistas</span><strong>S/84</strong></div>
 <div><span>22 pistas</span><strong>S/86</strong></div>
 <div><span>23 pistas</span><strong>S/88</strong></div>
@@ -467,7 +468,7 @@ precios</button>
 <div><span>27 pistas</span><strong>S/98</strong></div>
 <div><span>28 pistas</span><strong>S/99</strong></div>
 <div><span>29 pistas</span><strong>S/101</strong></div>
-<div><span>30 pistas</span><strong>S/105</strong></div>
+<div><span>30 karaokes</span><strong>S/105</strong></div>
 </div>
 </div>
 <button class="modal-btn package-start-btn" type="button" id="packagesStartBtn">
@@ -594,7 +595,7 @@ placeholder="https://www.youtube.com/watch?v=...">
 
       <div class="campaign-phone-summary" id="campaignPhoneSummary">
         <div class="campaign-phone-summary-main">
-          <strong id="campaignPhoneTrackTitle">Pista musical</strong>
+          <strong id="campaignPhoneTrackTitle">Karaoke</strong>
           <small id="campaignPhoneTrackArtist">DJGABO</small>
           <div class="campaign-phone-tags" id="campaignPhoneTags"></div>
         </div>
@@ -658,19 +659,6 @@ placeholder="https://www.youtube.com/watch?v=...">
   </div>
 </div>
 
-<script src="./config.js?v=20260828-1"></script>
-<script src="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/js/core.js?v=20260731-70"></script>
-<script src="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/js/commerce.js?v=20260731-70"></script>
-<script src="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/js/catalog-player.js?v=20260811-34"></script>
-<script src="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/js/demo-worker-bridge.js?v=20260825-22"></script>
-<script src="https://unpkg.com/wavesurfer.js@7"></script>
-<script src="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/js/demo-player-pro.js?v=20260825-20"></script>
-<script src="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/js/modules/promotions/promo-controller.js?v=20260728-25"></script>
-<script src="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/js/modules/clients/client-modal-controller.js?v=20260727-17"></script>
-<script src="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/js/modules/crm/customer-crm.js?v=20260731-40"></script>
-<script src="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/js/modules/orders/order-register.js?v=20260727-10"></script>
-<script src="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/js/events.js?v=20260731-70"></script>
-<script>window.__DJGABO_BUILD__="20260731-V7";</script>
-<script src="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/js/final-player-fixes.js?v=20260825-23"></script>
+<script src="./karaoke-store.js?v=20260829-2"></script>
 </body>
 </html>

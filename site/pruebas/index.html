@@ -1,282 +1,676 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#050607">
-<title>DJGABO Karaoke Store — V4 Original</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="djgabo-build" content="20260731-V6">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script src="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/js/boot.js"></script>
+<title>Pistas Musicales para Cantantes MP3 y WAV | DJGABO</title>
+<meta name="description" content="Escucha demos, elige tus pistas y realiza tu pedido por WhatsApp.">
+<meta property="og:locale" content="es_PE">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="DJGABO">
+<meta property="og:title" content="Pistas Musicales para Cantantes MP3 y WAV | DJGABO">
+<meta property="og:description" content="Escucha demos, elige tus pistas y realiza tu pedido por WhatsApp.">
+<meta property="og:url" content="https://kitkaraoke.com/tienda">
+<meta property="og:image"
+content="https://kitkaraoke.com/images/banner_tienda_v2.png">
+<meta property="og:image:secure_url"
+content="https://kitkaraoke.com/images/banner_tienda_v2.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Pistas Musicales Editadas DJGABO">
+<link rel="canonical" href="https://kitkaraoke.com/tienda">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Pistas Musicales para Cantantes MP3 y WAV | DJGABO">
+<meta name="twitter:description" content="Escucha demos, elige tus pistas y realiza tu pedido por WhatsApp.">
+<meta name="twitter:image"
+content="https://kitkaraoke.com/images/banner_tienda_v2.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./styles.css">
+<link rel="preconnect" href="https://i.imgur.com" crossorigin>
+<link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="preconnect" href="https://kitkaraoke.com">
+<link rel="preconnect" href="https://script.google.com">
+<link rel="preconnect" href="https://script.googleusercontent.com">
+<link rel="preconnect" href="https://api.deezer.com">
+<link rel="preconnect" href="https://drive.google.com">
+<link rel="preconnect" href="https://docs.google.com">
+<link rel="dns-prefetch" href="//drive.google.com">
+<link rel="dns-prefetch" href="//docs.google.com">
+<link rel="dns-prefetch" href="//lh3.googleusercontent.com">
+<link rel="dns-prefetch" href="//res.cloudinary.com">
+<link rel="dns-prefetch" href="//script.googleusercontent.com">
+
+<link rel="preload" as="image" href="https://kitkaraoke.com/images/Yape.webp" fetchpriority="high">
+<link rel="preload" as="image" href="https://kitkaraoke.com/images/Plin.webp" fetchpriority="high">
+<link rel="preload" as="image" href="https://kitkaraoke.com/images/singers.png"
+media="(max-width: 1023px)">
+<link rel="preload" as="image" href="https://kitkaraoke.com/images/singers2.png"
+media="(min-width: 1024px)">
+<link
+href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/css/base.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/css/commerce.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/css/responsive.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/css/enhancements.css?v=20260728-31">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/css/promotions.css?v=20260731-70">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/css/experience.css?v=20260725-4">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/css/demo-player-pro.css?v=20260825-2">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/css/final-ui-fixes.css?v=20260825-23">
 </head>
 <body>
-<div class="version-bar">
-  <div class="version-inner">
-    <span><b>V4</b> Plantilla original DJGABO</span>
-    <nav><a href="../">V1</a><a href="../v2/">V2</a><a href="../v3/">V3</a><a class="active" href="./">V4</a></nav>
-  </div>
+<div class="direct-loading-screen" id="directLoadingScreen" aria-live="polite">
+<div class="direct-loading-card">
+<div class="direct-loading-spinner"></div>
+<strong id="directLoadingTitle">Cargando pista musical...</strong>
+<span id="directLoadingText">Preparando demo DJGABO</span>
 </div>
-
+</div>
 <div class="app">
-  <div class="app-shell">
-    <header class="topbar search-topbar">
-      <div class="search-cart-row">
-        <div class="search-hero" id="searchArea">
-          <span class="search-icon">⌕</span>
-          <input id="q" type="search" placeholder="Busca karaoke o artista..." autocomplete="off">
-          <button class="clear-btn" id="clearSearchBtn" type="button">×</button>
-        </div>
-
-        <button class="top-cart-btn" id="cartBtn" type="button" aria-label="Ver carrito">
-          <span class="cart-icon">🛒</span>
-          <span class="float-cart-label" id="floatCartLabel">0 karaokes</span>
-          <b class="cart-badge" id="cartBadge">0</b>
-        </button>
-
-        <button class="client-access-btn" id="accountBtn" type="button" aria-label="Mi cuenta">
-          <span>👤</span>
-          <i class="client-access-dot"></i>
-        </button>
-      </div>
-    </header>
-
-    <section class="hero">
-      <div class="premium-card">
-        <div class="premium-content">
-          <div class="premium-kicker">KARAOKES HD DJGABO</div>
-          <div class="premium-title">Tu karaoke listo para cantar.</div>
-          <div class="premium-sub">Escucha el demo, compra y vuelve a descargarlo desde <strong>Mis Karaokes</strong>.</div>
-          <button class="premium-btn" id="heroCatalogBtn" type="button">Ver Karaokes</button>
-        </div>
-        <img class="hero-people hero-mobile" src="https://kitkaraoke.com/images/singers.png" alt="" loading="eager">
-        <img class="hero-people hero-desktop" src="https://kitkaraoke.com/images/singers2.png" alt="" loading="eager">
-      </div>
-    </section>
-
-    <section class="account-strip">
-      <button id="accountStripBtn" type="button">
-        <span class="account-strip-icon">👤</span>
-        <span><strong>Mi Cuenta</strong><small>Compras y descargas</small></span>
-        <b>Mis Karaokes →</b>
-      </button>
-    </section>
-
-    <section class="section" id="newWrap">
-      <div class="section-head">
-        <div><h2 class="section-title">RECIÉN AGREGADOS</h2></div>
-        <button class="see-all" id="newSeeAll" type="button">Ver todo</button>
-      </div>
-      <div class="rail" id="newRail"></div>
-    </section>
-
-    <section class="section" id="mostRequestedWrap">
-      <div class="section-head">
-        <div><h2 class="section-title">DESTACADOS</h2></div>
-        <button class="see-all" id="topSeeAll" type="button">Ver todo</button>
-      </div>
-      <div class="rail" id="topRail"></div>
-    </section>
-
-    <section class="catalog-wrap" id="catalogo">
-      <div class="catalog-sticky">
-        <div class="tabs">
-          <button class="tab active" type="button" data-mode="full">LISTADO</button>
-          <button class="tab" type="button" data-mode="tops">TOP HITS 2026</button>
-          <button class="tab" type="button" data-mode="chorus">CON COROS</button>
-        </div>
-        <div class="mode-line"><span id="count">0 karaokes</span></div>
-      </div>
-
-      <div id="list"></div>
-
-      <div class="no-result" id="noResult" hidden>
-        <strong>No encontramos ese karaoke</strong>
-        <p>Prueba buscando por artista o título.</p>
-        <button class="no-btn dark" id="resetSearchBtn" type="button">Limpiar búsqueda</button>
-      </div>
-    </section>
-  </div>
+<div class="app-shell">
+<header class="topbar search-topbar">
+<div class="search-cart-row">
+<div class="search-hero" id="searchArea">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input id="q" type="search" placeholder="Busca pista o artista..." autocomplete="off"
+aria-label="Buscar canción o artista">
+<button class="clear-btn" id="clearSearchBtn" type="button" aria-label="Limpiarbúsqueda">×</button>
+<div class="search-suggestions" id="searchSuggestions" aria-label="Sugerencias de búsqueda"></div>
 </div>
-
-<button class="mobile-order-bar" id="mobileOrderBar" type="button">
-  <span>🛒 <b id="mobileOrderCount">0 karaokes</b></span>
-  <strong>VER CARRITO →</strong>
+<button class="top-cart-btn" id="floatCartBtn" type="button" aria-label="Ver pedido" title="Ver pedido">
+<i class="fa-solid fa-basket-shopping"></i>
+<span class="float-cart-label" id="floatCartLabel">0 pistas</span>
+<b class="cart-badge" id="heroCartBadge">0</b>
 </button>
+<button class="client-access-btn" type="button" id="clientAccessTopBtn"
+aria-label="Acceso clientes frecuentes" title="Zona clientes">
+<i class="fa-solid fa-user"></i>
+<span class="client-access-dot" aria-hidden="true"></span>
+</button>
+</div>
+</header>
+<div class="now-playing-sticky" id="nowPlayingBar" aria-live="polite">
+<div class="now-playing-card">
+<div class="now-playing-cover">
+<img id="nowPlayingCover" src="" alt="" loading="lazy" decoding="async">
+</div>
+<div class="now-playing-info">
+<div class="now-playing-label">Reproduciendo demo</div>
+<div class="now-playing-title" id="nowPlayingTitle">Pista musical</div>
+<div class="now-playing-artist" id="nowPlayingArtist">DJGABO</div>
+</div>
+<button class="now-playing-more" type="button" id="nowPlayingMoreBtn"
+aria-label="Opciones de la pista reproduciendo">
+<i class="fa-solid fa-ellipsis-vertical"></i>
+</button>
+</div>
+</div>
+<section class="hero" id="homeTop">
+<div class="premium-card">
+<div class="premium-content">
+<div class="premium-kicker">ACCESO PRIVADO DJGABO</div>
+<div class="premium-title"><span>Listo para tus chivos?</span></div>
+<div class="premium-sub">Accede a más de <span id="catalogCounter" class="catalog-counter">10.000</span> pistas para descargar vía WhatsApp.</div>
+<button class="premium-btn" type="button" id="premiumBtn">Ver Ofertas</button>
+</div>
+<img class="hero-people hero-mobile" src="https://kitkaraoke.com/images/singers.png"
+alt="Cantantes mostrando acceso desde celular" loading="eager" decoding="async"
+fetchpriority="high">
+<img class="hero-people hero-desktop"
+src="https://kitkaraoke.com/images/singers2.png" alt="Cantantes mostrando acceso desdecelular" loading="eager" decoding="async" fetchpriority="high">
+</div>
+</section>
+<section class="promo-launch-strip" id="promoLaunchStrip"
+aria-hidden="true"></section>
+<section class="section" id="newWrap" style="display:none;">
+<div class="section-head">
+<div>
+<h2 class="section-title">RECIÉN AGREGADOS</h2>
+</div>
+<button class="see-all" type="button" id="newSeeAll">Ver todo</button>
+</div>
+<div class="rail" id="newRail"></div>
+</section>
+<section class="section" id="mostRequestedWrap" style="display:none;">
+<div class="section-head">
+<div>
+<h2 class="section-title">DESTACADOS</h2>
+</div>
+<button class="see-all" type="button" id="mostRequestedSeeAll">Ver todo</button>
+</div>
+<div class="rail" id="mostRequestedRail"></div>
+</section>
+<section class="catalog-wrap" id="catalogo">
+<div class="catalog-sticky">
+<div class="mode-line">
+<span class="mode-label" id="modeLabel"></span>
+<span id="count">Cargando...</span>
+</div>
+<div class="tabs" aria-label="Filtros del catálogo">
+<button class="tab active" type="button" data-mode="full">LISTADO</button>
+<button class="tab" type="button" data-mode="tops">TOP HITS 2026</button>
+<button class="tab" type="button" data-mode="most">MÁS ELEGIDOS</button>
+</div>
+</div>
+<div id="statusBox">Cargando catálogo...</div>
+<div id="list" aria-live="polite"></div>
+<div id="deezerWorldWrap" class="deezer-world-wrap">
+<div class="deezer-world-head">
+<div>
+<strong>Canciones para cotizar a pedido</strong>
+<span>Solo aparecerán aquí canciones que no están disponibles en tu catálogo
+DJGABO.</span>
+</div>
+<div class="deezer-world-badge">Deezer</div>
+</div>
+<div id="deezerWorldList" class="deezer-world-list"></div>
+</div>
+<button id="loadMore" type="button">Cargar más</button>
+</section>
+</div>
+</div>
+<button class="mobile-order-bar" id="mobileOrderBar" type="button" aria-label="Ver pedido">
+<span><i class="fa-solid fa-basket-shopping"></i><b id="mobileOrderCount">0 pistas</b></span>
+<strong>VER PEDIDO <i class="fa-solid fa-arrow-right"></i></strong>
+</button>
+<button class="float-search" id="goSearchBtn" type="button" aria-label="Volver albuscador">
+<i class="fa-solid fa-magnifying-glass"></i>
+</button>
+<!-- REPRODUCTOR INFERIOR DEMO -->
+<div class="bottom-demo-player" id="bottomDemoPlayer" aria-live="polite">
+<div class="bottom-demo-cover">
+<img id="bottomDemoCover" src="" alt="" loading="lazy" decoding="async">
+</div>
+<div class="bottom-demo-info">
+<div class="bottom-demo-title" id="bottomDemoTitle">Pista musical</div>
+<div class="bottom-demo-artist" id="bottomDemoArtist">DJGABO</div>
+<audio id="bottomDemoAudio" controls preload="none"></audio>
+<iframe id="bottomDemoDrive" src="" allow="autoplay; encrypted-media"
+loading="eager"></iframe>
+</div>
+<div class="demo-play-hint" id="demoPlayHint" role="button" tabindex="0"
+aria-label="Volver a la pista que está sonando">
+<div class="demo-play-hint-track">
+<span id="demoPlayHintTextA">Toca ▶ para escuchar el demo</span>
+<span id="demoPlayHintTextB" aria-hidden="true">Toca ▶ para escuchar el
+demo</span>
+</div>
+</div>
+<button class="bottom-demo-close" type="button" id="bottomDemoClose"
+aria-label="Cerrar reproductor">×</button>
+</div>
+<iframe id="driveWarmFrame" src="" aria-hidden="true" tabindex="-1" loading="eager"
+style="position:absolute;width:1px;height:1px;left:-9999px;top:-9999px;opacity:0;pointer-events:none;border:0;"></iframe>
+<div class="demo-toast" id="demoToast" role="status" aria-live="polite">Demo vía
+WhatsApp</div>
+<!-- MENÚ DE OPCIONES DE PISTA -->
+<div class="song-options-menu" id="songOptionsMenu">
+<button type="button" data-menu-action="listen">
+<i class="fa-solid fa-play"></i>
+<span>Escuchar demo</span>
+</button>
+<button type="button" data-menu-action="share">
+<i class="fa-solid fa-share-nodes"></i>
+<span>Compartir</span>
+</button>
+<button type="button" data-menu-action="download">
+<i class="fa-solid fa-cart-plus"></i>
+<span>Agregar al pedido</span>
+</button>
+<button type="button" data-menu-action="free" id="promoFreeMenuBtn">
+<i class="fa-solid fa-gift"></i>
+<span>Elegir GRATIS</span>
+</button>
+</div>
+<!-- MODAL PISTA / PEDIDO -->
+<div class="modal-backdrop" id="songBackdrop">
+<div class="modal song-order-modal">
+<div class="modal-head">
+<h3>Detalle de pista</h3>
+<button class="modal-close" type="button" id="songClose">×</button>
+</div>
+<div class="song-order-body">
+<div class="song-order-cover">
+<img id="songModalCover" src="" alt="" loading="lazy" decoding="async">
+<button class="song-modal-cover-play" type="button" id="songModalCoverPlayBtn"
+aria-label="Reproducir demo">
+<i class="fa-solid fa-play"></i>
+</button>
+<div class="song-modal-hand" id="songModalHand" aria-hidden="true">👆</div>
+</div>
+<h3 class="song-order-title" id="songModalTitle">Pista musical</h3>
+<div class="song-order-artist" id="songModalArtist">DJGABO</div>
+<div class="song-order-tags" id="songModalTags"></div>
+<div class="song-variant-picker" id="songVariantPicker" aria-label="Versiones disponibles"></div>
+<div class="song-price-box" id="songPriceBox">
+<div class="song-price-main" id="songPriceMain">S/15</div>
+<div class="song-price-sub" id="songPriceSub">Agrega 1 pista más y lleva 2 por S/25</div>
+</div>
+<div class="song-inline-player" id="songInlinePlayer">
+<strong id="songInlinePlayerTitle">Reproduciendo pista musical</strong>
+<audio id="songLocalAudio" controls preload="none"></audio>
+<iframe id="songDrivePreview" src="" allow="autoplay"></iframe>
+<div class="song-inline-help" id="songInlineHelp" style="display:none;"></div>
+</div>
+<div class="song-order-actions two" style="margin-top:10px;">
+<button class="song-order-btn add" type="button" id="songAddBtn">
+<i class="fa-solid fa-cart-plus"></i>
+Agregar al pedido
+</button>
+<button class="song-order-btn free" type="button" id="songFreeBtn">
+<i class="fa-solid fa-gift"></i>
+Pedir GRATIS
+</button>
+</div>
+<div class="song-order-note" id="songModalNote" style="display:none;"></div>
+</div>
+</div>
+</div>
+<!-- MODAL CANASTA -->
+<div class="modal-backdrop" id="cartBackdrop">
+<div class="modal cart-modal ck-cart-modal">
+<div class="ck-cart-head">
+<div class="ck-cart-head-top">
+<h2 class="ck-cart-title">Tu pedido</h2>
+<button class="ck-cart-close" type="button" id="cartClose">×</button>
+</div>
+</div>
+<div class="ck-order-route" aria-label="Flujo del pedido">
+<span id="cartRouteStep1">Pedido</span>
+<i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+<span id="cartRouteStep2">Pago</span>
+<i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+<span id="cartRouteStep3">WhatsApp</span>
+</div>
+<div class="crm-cart-identity" id="crmCartIdentity" hidden>
+  <div class="crm-cart-identity-copy">
+    <span>Pedido para</span>
+    <strong id="crmCartPhone">WhatsApp guardado</strong>
+  </div>
+  <button type="button" id="crmCartChangePhone">Cambiar</button>
+</div>
+<div id="cartItems" class="ck-cart-scroll"></div>
+<div id="cartEmpty" class="ck-empty">
+Tu pedido está vacío.<br>
+Busca una pista, escucha el demo y presiona <strong>Agregar</strong>.
+</div>
+<div class="ck-footer" id="priceCard" style="display:none;">
+<div class="ck-total-row">
+<div class="ck-footer-left">
+<button class="ck-detail-toggle" type="button" id="cartPriceDetailToggle">
+Ver detalle
+</button>
+</div>
+<div class="ck-footer-right">
+<span class="ck-total-label">Total a pagar</span>
+<strong class="ck-total-amount" id="totalText">S/0</strong>
+<button class="ck-empty-cart" type="button" id="clearCartBtn">
+Vaciar pedido
+</button>
+</div>
+</div>
+<div class="ck-price-detail" id="cartPriceDetail">
+<div class="ck-price-line">
+<span>Precio real</span>
+<strong id="realPriceText">S/0</strong>
+</div>
+<div class="ck-price-line discount">
+<span>Descuento</span>
+<strong id="discountText">-S/0</strong>
+</div>
+<div class="ck-price-line">
+<span>Ahorro</span>
+<strong id="savingText">0%</strong>
+</div>
+</div>
+<div class="tariff-note ck-hidden-control" id="tariffNote"></div>
+<div class="payment-warning" id="cartError"></div>
+<div class="ck-step-message" id="cartStepMessage" hidden></div>
+<button class="ck-whatsapp-btn" type="button" id="sendOrderBtn"
+style="display:none;">
+<i class="fa-brands fa-whatsapp"></i>
+Descargar Pistas Musicales
+</button>
+<p class="ck-whatsapp-note">
+Tu pedido se enviará por WhatsApp.
+</p>
+</div>
+<!-- Controles ocultos para mantener compatibilidad con el JS existente -->
+<div class="ck-hidden-control" id="promoCartNote"></div>
+<div class="ck-hidden-control" id="cartMoreNote"></div>
+<button class="ck-hidden-control" type="button" id="toggleCartListBtn">Ver lista
+completa</button>
+<div class="ck-hidden-control" id="paymentCartWrap"></div>
+<button class="ck-hidden-control" type="button" id="keepSearchingBtn">Seguir
+buscando</button>
+</div>
+</div>
+<!-- MODAL GUÍA PISTA GRATIS -->
+<div class="free-guide-backdrop" id="freeGuideBackdrop">
+<div class="free-guide-modal guide3-modal" role="dialog" aria-modal="true" aria-labelledby="freeGuideTitle">
+<div class="guide3-head">
+<div>
+<div class="guide3-kicker">🎁 PROMO ACTIVADA</div>
+<h3 class="guide3-title" id="freeGuideTitle">Tienes pistas <strong>GRATIS</strong></h3>
+<p class="guide3-text" id="freeGuideText">Toca los 3 puntitos y elige GRATIS.</p>
+</div>
+<button class="guide3-close" type="button" id="freeGuideClose" aria-label="Cerrar guía">×</button>
+</div>
+<div class="guide3-body" aria-hidden="true">
+<div class="guide3-menu">
+<button type="button"><i class="fa-solid fa-play"></i> Escuchar demo</button>
+<button type="button" class="share"><i class="fa-solid fa-share-nodes"></i> Compartir</button>
+<button type="button" class="add"><i class="fa-solid fa-cart-plus"></i> Agregar al pedido</button>
+<button type="button" class="free"><i class="fa-solid fa-gift"></i> Elegir GRATIS <span id="freeDemoProgress">0/3</span></button>
+</div>
+<div class="guide3-list">
+<div class="guide3-row" data-free-demo-card="0">
+<div class="guide3-cover"><img data-free-demo-cover="0" src="https://res.cloudinary.com/dhr5n0ekv/image/upload/v1783137131/djgabo_covers/kjarkas-saya-de-cochabamba-coro-1783137131074.jpg" alt="" loading="lazy" decoding="async"><span class="guide3-cover-play"><i class="fa-solid fa-play"></i></span></div>
+<div class="guide3-info"><strong class="guide3-song-title" data-free-demo-title="0">Saya de Cochabamba</strong><div class="guide3-artist" data-free-demo-artist="0">Kjarkas</div><div class="guide3-tags"><span class="guide3-pill">CORO</span></div></div>
+<button class="guide3-dots" type="button"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+</div>
+<div class="guide3-row target" data-free-demo-card="1">
+<div class="guide3-cover"><img id="freeDemoCoverImg" data-free-demo-cover="1" src="https://res.cloudinary.com/dhr5n0ekv/image/upload/v1783137059/djgabo_covers/munequita-milly-mix-alicia-delgado-en-vivo-1783137059351.jpg" alt="" loading="lazy" decoding="async"><span class="guide3-cover-play"><i class="fa-solid fa-play"></i></span></div>
+<div class="guide3-info"><strong class="guide3-song-title" id="freeDemoTitle" data-free-demo-title="1">Mix Alicia Delgado</strong><div class="guide3-artist" id="freeDemoArtist" data-free-demo-artist="1">Muñequita Milly</div><div class="guide3-tags"><span class="guide3-pill">CORO</span></div></div>
+<button class="guide3-dots" type="button"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+</div>
+<div class="guide3-row" data-free-demo-card="2">
+<div class="guide3-cover"><img data-free-demo-cover="2" src="https://res.cloudinary.com/dhr5n0ekv/image/upload/v1783137124/djgabo_covers/los-autenticos-decadantes-los-piratas-coro-1783137123797.jpg" alt="" loading="lazy" decoding="async"><span class="guide3-cover-play"><i class="fa-solid fa-play"></i></span></div>
+<div class="guide3-info"><strong class="guide3-song-title" data-free-demo-title="2">Los Piratas</strong><div class="guide3-artist" data-free-demo-artist="2">Los Autenticos Decadantes</div><div class="guide3-tags"><span class="guide3-pill">CORO</span></div></div>
+<button class="guide3-dots" type="button"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+</div>
+</div>
+<div class="guide3-hand">👉</div>
+</div>
+<div class="guide3-footer">
+<button class="guide3-start" type="button" id="freeGuideGoBtn">Empezar</button>
+</div>
+</div>
+</div>
+<!-- AVISO DE PISTAS GRATIS PENDIENTES -->
+<div class="free-pending-backdrop" id="freePendingBackdrop">
+<div class="free-pending-modal" role="dialog" aria-modal="true" aria-labelledby="freePendingTitle">
+<div class="free-pending-icon"><i class="fa-solid fa-gift"></i></div>
+<h3 id="freePendingTitle">Aún tienes pistas GRATIS</h3>
+<p id="freePendingText">Todavía puedes elegir pistas gratis antes de enviar tu pedido.</p>
+<div class="free-pending-actions">
+<button class="free-pending-choose" type="button" id="freePendingChoose">Elegirlas ahora</button>
+<button class="free-pending-continue" type="button" id="freePendingContinue">Continuar sin ellas</button>
+</div>
+</div>
+</div>
+<!-- MODAL PAQUETES -->
+<div class="modal-backdrop" id="packagesBackdrop">
+<div class="modal packages-modal">
+<div class="modal-head">
+<h3>Paquetes de pistas</h3>
+<button class="modal-close" type="button" id="packagesClose">×</button>
+</div>
+<div class="modal-body packages-body">
+<p class="modal-copy packages-copy">
+Mira los precios por cantidad. Luego busca tus pistas, agrégalas a tu pedido y envía
+todo desde <strong>Ver pedido</strong>.
+</p>
+<div class="package-highlight">
+<div>
+<span>Unidad desde</span>
+<strong>S/15</strong>
+</div>
+<small>Descuentos automáticos por cantidad</small>
+</div>
+<div class="package-quick-grid">
+<div class="package-card"><span>1 pista</span><strong>S/15</strong></div>
+<div class="package-card"><span>2 pistas</span><strong>S/25</strong></div>
+<div class="package-card"><span>5 pistas</span><strong>S/45</strong></div>
+<div class="package-card hot"><span>10 pistas</span><strong>S/55</strong></div>
+<div class="package-card hot"><span>20 pistas</span><strong>S/82</strong></div>
+<div class="package-card hot"><span>30 pistas</span><strong>S/105</strong></div>
+</div>
+<button class="package-toggle" type="button" id="togglePackagesBtn">Ver todos los
+precios</button>
+<div class="all-packages" id="allPackagesList">
+<div class="package-table">
+<div><span>1 pista</span><strong>S/15</strong></div>
+<div><span>2 pistas</span><strong>S/25</strong></div>
+<div><span>3 pistas</span><strong>S/28</strong></div>
+<div><span>4 pistas</span><strong>S/35</strong></div>
+<div><span>5 pistas</span><strong>S/45</strong></div>
+<div><span>6 pistas</span><strong>S/46</strong></div>
+<div><span>7 pistas</span><strong>S/47</strong></div>
+<div><span>8 pistas</span><strong>S/48</strong></div>
+<div><span>9 pistas</span><strong>S/49</strong></div>
+<div><span>10 pistas</span><strong>S/55</strong></div>
+<div><span>11 pistas</span><strong>S/56</strong></div>
+<div><span>12 pistas</span><strong>S/57</strong></div>
+<div><span>13 pistas</span><strong>S/60</strong></div>
+<div><span>14 pistas</span><strong>S/65</strong></div>
+<div><span>15 pistas</span><strong>S/70</strong></div>
+<div><span>16 pistas</span><strong>S/75</strong></div>
+<div><span>17 pistas</span><strong>S/76</strong></div>
+<div><span>18 pistas</span><strong>S/78</strong></div>
+<div><span>19 pistas</span><strong>S/80</strong></div>
+<div><span>20 pistas</span><strong>S/82</strong></div>
+<div><span>21 pistas</span><strong>S/84</strong></div>
+<div><span>22 pistas</span><strong>S/86</strong></div>
+<div><span>23 pistas</span><strong>S/88</strong></div>
+<div><span>24 pistas</span><strong>S/92</strong></div>
+<div><span>25 pistas</span><strong>S/94</strong></div>
+<div><span>26 pistas</span><strong>S/96</strong></div>
+<div><span>27 pistas</span><strong>S/98</strong></div>
+<div><span>28 pistas</span><strong>S/99</strong></div>
+<div><span>29 pistas</span><strong>S/101</strong></div>
+<div><span>30 pistas</span><strong>S/105</strong></div>
+</div>
+</div>
+<button class="modal-btn package-start-btn" type="button" id="packagesStartBtn">
+<i class="fa-solid fa-magnifying-glass"></i>
+Empezar a buscar pistas
+</button>
+</div>
+</div>
+</div>
+<!-- MODAL CONSULTA -->
+<div class="modal-backdrop" id="requestBackdrop">
+<div class="modal">
+<div class="modal-head">
+<h3>Cotizar edición personalizada</h3>
+<button class="modal-close" type="button" id="requestClose">×</button>
+</div>
+<div class="modal-body">
+<p class="modal-copy request-required-copy">
+Para revisar y cotizar tu pista necesitamos <strong>obligatoriamente el enlace exacto de YouTube</strong>.
+</p>
+<div class="form-row">
+<label for="requestSongInput">Canción o artista</label>
+<input id="requestSongInput" type="text" placeholder="Ejemplo: Grupo 5 - Motor ymotivo">
+</div>
+<button class="youtube-btn" type="button" id="searchYoutubeBtn">
+Buscar en YouTube
+</button>
+<div class="form-row">
+<label for="requestLinkInput">Enlace de YouTube <b class="required-mark">OBLIGATORIO</b></label>
+<input id="requestLinkInput" type="text"
+placeholder="https://www.youtube.com/watch?v=...">
+<small class="request-link-help" id="requestLinkHelp">Pega un enlace de youtube.com o youtu.be para habilitar el envío.</small>
+</div>
+<div class="error" id="requestError"></div>
+<div class="modal-actions">
+<button class="btn-cancel" type="button" id="requestCancelBtn">Cancelar</button>
+<button class="btn-send" type="button" id="requestSendBtn" disabled><i class="fa-brands fa-whatsapp"></i> Cotizar por WhatsApp</button>
+</div>
+</div>
+</div>
+</div>
+<!-- MODAL DE REGALOS / VALIDACIÓN CLIENTE -->
+<div class="wheel-backdrop" id="wheelBackdrop">
+  <div class="wheel-modal">
+    <button class="wheel-close" type="button" id="wheelClose">×</button>
+    <div class="wheel-kicker"><i class="fa-solid fa-gift"></i> Beneficio exclusivo</div>
+    <h2 class="wheel-title" id="wheelTitle">Valida tus regalos DJGABO</h2>
+    <p class="wheel-sub" id="wheelSub">Ingresa tu WhatsApp. El sistema detecta si eres cliente nuevo, frecuente o VIP.</p>
+    <div class="crm-identity-bar" id="crmIdentityBar" hidden>
+      <div class="crm-identity-icon"><i class="fa-brands fa-whatsapp"></i></div>
+      <div class="crm-identity-copy">
+        <span>Sesión activa</span>
+        <strong id="crmIdentityPhone">WhatsApp guardado</strong>
+      </div>
+      <button type="button" id="crmLogoutBtn">Salir</button>
+    </div>
+    <div class="wheel-guide-wrap" id="wheelGuideWrap">
+      <img src="https://kitkaraoke.com/images/guia.png" alt="Guía para escoger pistas gratis" loading="lazy" decoding="async">
+    </div>
+    <div class="wheel-form">
+      <input class="wheel-phone" id="wheelPhoneInput" type="tel" inputmode="numeric" autocomplete="tel" placeholder="Tu WhatsApp" aria-label="Número de WhatsApp para validar regalos">
+      <button class="wheel-spin-btn" type="button" id="wheelSpinBtn"><i class="fa-solid fa-check"></i> VALIDAR</button>
+    </div>
+    <div class="wheel-tier" id="wheelTierText"></div>
+    <div class="wheel-result" id="wheelResult"></div>
+    <div class="wheel-actions" id="wheelActions">
+      <button class="wheel-mini-btn dark" type="button" id="wheelAgainBtn">Cambiar número</button>
+      <button class="wheel-mini-btn green" type="button" id="wheelUseBtn">Ir a comprar</button>
+    </div>
+    <p class="wheel-legal">Regalos válidos para pedido por WhatsApp. Sujeto a verificación del número ingresado.</p>
+  </div>
+</div>
 
-<div class="bottom-demo-player" id="bottomDemoPlayer" hidden>
-  <div class="bottom-demo-cover" id="bottomDemoCover">🎤</div>
-  <div class="bottom-demo-info">
-    <div class="bottom-demo-title" id="bottomDemoTitle">Karaoke</div>
-    <div class="bottom-demo-artist" id="bottomDemoArtist">DJGABO</div>
-    <div class="fake-audio">
-      <button id="playerToggle" type="button">❚❚</button>
-      <div class="fake-track"><i id="playerProgress"></i></div>
-      <span id="playerTime">0:18</span>
+<!-- MODAL FINAL PAGO YAPE / PLIN -->
+<div class="pay-sheet-backdrop" id="paymentSheetBackdrop" aria-hidden="true">
+  <div class="pay-sheet" role="dialog" aria-modal="true" aria-labelledby="paymentSheetTitle">
+    <button class="pay-sheet-close" type="button" id="paymentSheetClose" aria-label="Cerrar">×</button>
+
+    <div id="paymentSheetContent">
+      <h3 class="pay-sheet-title" id="paymentSheetTitle">Elige cómo pagar</h3>
+      <p class="pay-sheet-sub">Selecciona Yape o Plin para continuar.</p>
+      <div class="pay-sheet-total">
+        <span>Total a pagar</span>
+        <strong id="paymentSheetTotal">S/0.00</strong>
+      </div>
+      <div class="pay-sheet-options">
+        <button class="pay-sheet-option" type="button" data-payment-method="Yape">
+          <img class="pay-sheet-logo" src="https://kitkaraoke.com/images/Yape.webp" alt="Yape" loading="eager" decoding="async" fetchpriority="high">
+          <span>Yape</span>
+        </button>
+        <button class="pay-sheet-option" type="button" data-payment-method="Plin">
+          <img class="pay-sheet-logo" src="https://kitkaraoke.com/images/Plin.webp" alt="Plin" loading="eager" decoding="async" fetchpriority="high">
+          <span>Plin</span>
+        </button>
+      </div>
+      <p class="pay-sheet-note">Al elegir una opción, se abrirá WhatsApp con el resumen de tu pedido.</p>
+    </div>
+
+    <div class="order-success-panel" id="paymentSuccessPanel" hidden>
+      <div class="order-success-icon"><i class="fa-solid fa-check"></i></div>
+      <h3 id="paymentSuccessTitle">¡PEDIDO ENVIADO!</h3>
+      <p id="paymentSuccessText">Abriendo WhatsApp...</p>
+      <button class="order-success-whatsapp" type="button" id="paymentSuccessWhatsappBtn"><i class="fa-brands fa-whatsapp"></i> ¿No se abrió WhatsApp? Abrir pedido</button>
+      <div class="order-success-summary" id="paymentSuccessSummary"></div>
+
+      <div class="order-success-offer" id="paymentSuccessOffer" hidden>
+        <strong id="paymentSuccessOfferTitle">🎁 3 PISTAS GRATIS</strong>
+        <span id="paymentSuccessOfferText">Comprando solo 2 pistas.</span>
+        <button type="button" id="paymentSuccessOfferBtn">VER PROMOCIÓN</button>
+      </div>
+
+      <button class="order-success-primary" type="button" id="paymentSuccessPrimary">SEGUIR VIENDO PISTAS</button>
     </div>
   </div>
-  <button class="bottom-demo-close" id="bottomDemoClose" type="button">×</button>
 </div>
 
-<div class="song-options-menu" id="songOptionsMenu" hidden>
-  <button type="button" data-menu-action="listen"><span>▶</span> Escuchar demo</button>
-  <button type="button" data-menu-action="detail"><span>ℹ</span> Ver detalle</button>
-  <button type="button" data-menu-action="add"><span>🛒</span> Agregar al carrito</button>
-</div>
+<!-- MODAL FINAL WHATSAPP CAMPAÑA GRATIS -->
+<div class="pay-sheet-backdrop" id="campaignPhoneSheetBackdrop" aria-hidden="true">
+  <div class="pay-sheet campaign-phone-sheet" role="dialog" aria-modal="true" aria-labelledby="campaignPhoneSheetTitle">
+    <button class="pay-sheet-close" type="button" id="campaignPhoneSheetClose" aria-label="Cerrar">×</button>
 
-<div class="modal-backdrop" id="songBackdrop" hidden>
-  <div class="modal song-order-modal">
-    <div class="modal-head">
-      <h3>Detalle de karaoke</h3>
-      <button class="modal-close" type="button" data-close-modal>×</button>
+    <div id="campaignPhoneContent">
+      <h3 class="pay-sheet-title" id="campaignPhoneSheetTitle">Tu pedido</h3>
+
+      <div class="campaign-phone-summary" id="campaignPhoneSummary">
+        <div class="campaign-phone-summary-main">
+          <strong id="campaignPhoneTrackTitle">Pista musical</strong>
+          <small id="campaignPhoneTrackArtist">DJGABO</small>
+          <div class="campaign-phone-tags" id="campaignPhoneTags"></div>
+        </div>
+        <b>FREE</b>
+      </div>
+
+      <button class="campaign-change-track" type="button" id="campaignChangeTrackBtn">Cambiar pista</button>
+
+      <p class="pay-sheet-sub" id="campaignPhoneSheetSub">Ingresa tu WhatsApp y recibe tu pista GRATIS directamente en tu celular.</p>
+
+      <label class="crm-phone-label" for="campaignPhoneSheetInput">Tu WhatsApp</label>
+      <input class="crm-phone-input" id="campaignPhoneSheetInput" type="tel" inputmode="numeric" autocomplete="tel" placeholder="Ejemplo: 987654321" aria-label="WhatsApp para recibir la pista gratis">
+
+      <div class="campaign-disabled-payments" id="campaignDisabledPayments">
+        <div class="campaign-disabled-payments-title" id="campaignNoPaymentText">No necesitas realizar ningún pago</div>
+        <div class="campaign-disabled-payments-options">
+          <div class="campaign-disabled-pay-option" aria-disabled="true">
+            <img src="https://kitkaraoke.com/images/Yape.webp" alt="Yape" loading="eager" decoding="async" fetchpriority="high">
+            <span>Yape</span><i class="fa-solid fa-ban" aria-hidden="true"></i>
+          </div>
+          <div class="campaign-disabled-pay-option" aria-disabled="true">
+            <img src="https://kitkaraoke.com/images/Plin.webp" alt="Plin" loading="eager" decoding="async" fetchpriority="high">
+            <span>Plin</span><i class="fa-solid fa-ban" aria-hidden="true"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="payment-warning" id="campaignPhoneSheetError"></div>
+      <button class="pay-sheet-confirm" type="button" id="campaignPhoneConfirmBtn"><i class="fa-brands fa-whatsapp"></i> RECIBIR POR WHATSAPP</button>
     </div>
-    <div class="song-order-body">
-      <button class="song-order-cover" id="songModalCover" type="button">
-        <span>🎤</span><i>▶</i>
-      </button>
-      <h3 class="song-order-title" id="songModalTitle">Karaoke</h3>
-      <div class="song-order-artist" id="songModalArtist">DJGABO</div>
-      <div class="song-order-tags" id="songModalTags"></div>
 
-      <div class="song-format-box">
-        <span>Formato</span><strong>MP4 · HD</strong>
-        <span>Entrega</span><strong>Mi Cuenta</strong>
+    <div class="order-success-panel" id="campaignSuccessPanel" hidden>
+      <div class="order-success-icon"><i class="fa-solid fa-check"></i></div>
+      <h3 id="campaignSuccessTitle">¡PEDIDO ENVIADO!</h3>
+      <p id="campaignSuccessText">Tu pista GRATIS quedó registrada.</p>
+      <button class="order-success-whatsapp" type="button" id="campaignSuccessWhatsappBtn"><i class="fa-brands fa-whatsapp"></i> ¿No se abrió WhatsApp? Abrir pedido</button>
+
+      <div class="order-success-offer" id="campaignSuccessOffer" hidden>
+        <strong id="campaignSuccessOfferTitle">🎁 ¡TIENES OTRO REGALO HOY!</strong>
+        <span id="campaignSuccessOfferText"><b>LLÉVATE 3 PISTAS GRATIS</b><small>Comprando solo 2 pistas.</small></span>
+        <button type="button" id="campaignSuccessOfferBtn">🎁 QUIERO MIS 3 PISTAS GRATIS</button>
       </div>
 
-      <div class="song-price-box">
-        <div class="song-price-main" id="songPriceMain">S/5.00</div>
-        <div class="song-price-sub">Después de comprarlo aparecerá en Mis Karaokes.</div>
-      </div>
-
-      <div class="song-order-actions two">
-        <button class="song-order-btn demo" id="songDemoBtn" type="button">▶ Escuchar demo</button>
-        <button class="song-order-btn add" id="songAddBtn" type="button">🛒 Agregar</button>
-      </div>
+      <button class="order-success-primary" type="button" id="campaignSuccessPrimary">Ahora no</button>
     </div>
   </div>
 </div>
 
-<div class="modal-backdrop" id="cartBackdrop" hidden>
-  <div class="modal cart-modal">
-    <div class="modal-head">
-      <h3>Tu carrito</h3>
-      <button class="modal-close" type="button" data-close-modal>×</button>
-    </div>
-    <div class="cart-route"><span class="active">Carrito</span><i>›</i><span>Cuenta</span><i>›</i><span>Compra</span></div>
-    <div class="cart-items" id="cartItems"></div>
-    <div class="cart-empty" id="cartEmpty" hidden>Tu carrito está vacío.<br>Busca un karaoke y presiona <strong>Agregar</strong>.</div>
-    <div class="price-card" id="priceCard">
-      <div class="price-main-line"><span>Total a pagar</span><strong id="totalText">S/0.00</strong></div>
-      <div class="price-mini-line">
-        <span>Karaokes<b id="cartQtyText">0</b></span>
-        <span>Entrega<b>Digital</b></span>
-        <span>Formato<b>MP4</b></span>
-      </div>
-    </div>
-    <div class="cart-footer-actions">
-      <button class="secondary-btn" id="clearCartBtn" type="button">Vaciar</button>
-      <button class="modal-btn" id="checkoutBtn" type="button">Continuar compra</button>
-    </div>
-    <p class="cart-note">Pago simulado en esta versión.</p>
+<!-- IDENTIFICACIÓN WHATSAPP PARA PEDIDOS NORMALES -->
+<div class="pay-sheet-backdrop" id="orderPhoneSheetBackdrop" aria-hidden="true">
+  <div class="pay-sheet order-phone-sheet" role="dialog" aria-modal="true" aria-labelledby="orderPhoneSheetTitle">
+    <button class="pay-sheet-close" type="button" id="orderPhoneSheetClose" aria-label="Cerrar">×</button>
+    <div class="order-phone-icon"><i class="fa-brands fa-whatsapp"></i></div>
+    <h3 class="pay-sheet-title" id="orderPhoneSheetTitle">¿A qué WhatsApp enviamos tus pistas?</h3>
+    <p class="pay-sheet-sub">Lo guardaremos para este pedido y tus próximas compras.</p>
+    <label class="crm-phone-label" for="orderPhoneSheetInput">Tu WhatsApp</label>
+    <input class="crm-phone-input" id="orderPhoneSheetInput" type="tel" inputmode="numeric" autocomplete="tel" placeholder="Ejemplo: 987654321" aria-label="WhatsApp para registrar el pedido">
+    <div class="payment-warning" id="orderPhoneSheetError"></div>
+    <button class="pay-sheet-confirm" type="button" id="orderPhoneSheetConfirm"><i class="fa-solid fa-check"></i> Confirmar WhatsApp</button>
+    <p class="crm-phone-privacy">Con este WhatsApp podrás consultar tu historial de pedidos cuando vuelvas a la tienda.</p>
   </div>
 </div>
 
-<div class="modal-backdrop" id="accountBackdrop" hidden>
-  <div class="modal account-modal">
-    <div class="modal-head">
-      <h3>Mi Cuenta</h3>
-      <button class="modal-close" type="button" data-close-modal>×</button>
-    </div>
-
-    <div id="loggedOut" class="account-login">
-      <div class="account-big-icon">👤</div>
-      <h3>Tu biblioteca DJGABO</h3>
-      <p>Inicia sesión para ver tus karaokes comprados y descargarlos nuevamente.</p>
-      <button class="modal-btn" id="loginOpenBtn" type="button">Iniciar sesión</button>
-      <button class="account-register-link" id="registerOpenBtn" type="button">Crear una cuenta</button>
-    </div>
-
-    <div id="loggedIn" hidden>
-      <div class="account-profile">
-        <span class="account-avatar">A</span>
-        <div><small>CUENTA DEMO</small><strong>Cliente DJGABO</strong><span>cliente@demo.local</span></div>
-        <button id="logoutBtn" type="button">Salir</button>
-      </div>
-
-      <div class="account-tabs">
-        <button class="active" data-account-tab="library">MIS KARAOKES</button>
-        <button data-account-tab="orders">PEDIDOS</button>
-        <button data-account-tab="profile">PERFIL</button>
-      </div>
-
-      <div class="account-panel" id="libraryPanel">
-        <div class="account-panel-head"><h3>Mis Karaokes</h3><span id="libraryCount">0</span></div>
-        <div id="libraryList"></div>
-      </div>
-
-      <div class="account-panel" id="ordersPanel" hidden>
-        <div class="account-panel-head"><h3>Historial</h3></div>
-        <div id="ordersList"></div>
-      </div>
-
-      <div class="account-panel" id="profilePanel" hidden>
-        <div class="profile-line"><span>Nombre</span><strong>Cliente DJGABO</strong></div>
-        <div class="profile-line"><span>Correo</span><strong>cliente@demo.local</strong></div>
-        <div class="profile-line"><span>Estado</span><strong class="status-active">Activo</strong></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal-backdrop" id="authBackdrop" hidden>
-  <div class="modal auth-modal">
-    <div class="modal-head">
-      <h3 id="authTitle">Iniciar sesión</h3>
-      <button class="modal-close" type="button" data-close-modal>×</button>
-    </div>
-    <div class="modal-body">
-      <p class="modal-copy" id="authCopy">Accede a tus compras y descargas.</p>
-      <div class="auth-switch">
-        <button class="active" data-auth="login" type="button">Ingresar</button>
-        <button data-auth="register" type="button">Crear cuenta</button>
-      </div>
-      <form id="authForm">
-        <div class="form-row" id="nameRow" hidden><label>Nombre</label><input type="text" placeholder="Tu nombre"></div>
-        <div class="form-row"><label>Correo</label><input type="email" placeholder="correo@ejemplo.com" required></div>
-        <div class="form-row"><label>Contraseña</label><input type="password" placeholder="••••••••" required></div>
-        <button class="modal-btn" id="authSubmit" type="submit">Ingresar</button>
-      </form>
-      <p class="auth-demo-note">Demo: cualquier correo y contraseña permiten entrar.</p>
-    </div>
-  </div>
-</div>
-
-<div class="modal-backdrop" id="checkoutBackdrop" hidden>
-  <div class="modal checkout-modal">
-    <div class="checkout-body">
-      <span class="success-circle">✓</span>
-      <small>CHECKOUT DE PRUEBA</small>
-      <h3>Simular compra</h3>
-      <p>No se cobrará dinero. La compra se guardará en tu cuenta de demostración.</p>
-      <div id="checkoutItems" class="checkout-items"></div>
-      <button class="modal-btn" id="approvePurchaseBtn" type="button">Simular compra aprobada</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-backdrop" id="successBackdrop" hidden>
-  <div class="modal checkout-modal">
-    <div class="checkout-body">
-      <span class="success-circle">✓</span>
-      <small>COMPRA APROBADA · DEMO</small>
-      <h3>Ya está en Mis Karaokes</h3>
-      <p>Puedes cerrar sesión, volver a entrar y descargarlo nuevamente.</p>
-      <button class="modal-btn" id="goLibraryBtn" type="button">Ver Mis Karaokes</button>
-    </div>
-  </div>
-</div>
-
-<div class="demo-toast" id="toast" hidden>Listo</div>
-<script src="./app.js"></script>
+<script src="./config.js?v=20260828-1"></script>
+<script src="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/js/core.js?v=20260731-70"></script>
+<script src="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/js/commerce.js?v=20260731-70"></script>
+<script src="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/js/catalog-player.js?v=20260811-34"></script>
+<script src="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/js/demo-worker-bridge.js?v=20260825-22"></script>
+<script src="https://unpkg.com/wavesurfer.js@7"></script>
+<script src="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/js/demo-player-pro.js?v=20260825-20"></script>
+<script src="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/js/modules/promotions/promo-controller.js?v=20260728-25"></script>
+<script src="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/js/modules/clients/client-modal-controller.js?v=20260727-17"></script>
+<script src="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/js/modules/crm/customer-crm.js?v=20260731-40"></script>
+<script src="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/js/modules/orders/order-register.js?v=20260727-10"></script>
+<script src="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/js/events.js?v=20260731-70"></script>
+<script>window.__DJGABO_BUILD__="20260731-V7";</script>
+<script src="https://cdn.jsdelivr.net/gh/clubkaraoke/TIENDA_PISTAS_WEB@main/assets/js/final-player-fixes.js?v=20260825-23"></script>
 </body>
 </html>

@@ -1,0 +1,16 @@
+#promoLaunchStrip,.deezer-world-wrap{display:none!important}
+#list{min-height:300px}
+.karaoke-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px;padding:10px 0 24px}
+.karaoke-card{background:#fff;border:1px solid rgba(24,20,46,.10);border-radius:18px;overflow:hidden;box-shadow:0 10px 28px rgba(24,20,46,.08);min-width:0}
+.karaoke-cover{position:relative;width:100%;aspect-ratio:1/1;border:0;padding:0;background:#171425;overflow:hidden;cursor:pointer}
+.karaoke-cover img{width:100%;height:100%;object-fit:cover;display:block}
+.karaoke-play{position:absolute;right:12px;bottom:12px;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#171425;box-shadow:0 6px 18px rgba(0,0,0,.22)}
+.karaoke-info{padding:14px}.karaoke-title{font-weight:900;color:#171425;line-height:1.18;min-height:2.35em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.karaoke-artist{font-size:.9rem;color:#6d687d;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.karaoke-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:9px;min-height:22px}.karaoke-tags span{font-size:.65rem;font-weight:800;border-radius:999px;padding:4px 7px;background:#f0eef7;color:#514b68}
+.karaoke-id{font-size:.64rem;color:#aaa5b7;margin-top:6px;font-weight:700}
+.karaoke-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}.karaoke-actions button{border:0;border-radius:10px;padding:10px 8px;font-weight:900;font-size:.75rem;cursor:pointer}
+.karaoke-demo{background:#efedf6;color:#211b38}.karaoke-add{background:#24183e;color:#fff}
+.rail .karaoke-card{min-width:185px;width:185px;scroll-snap-align:start}.rail .karaoke-actions{grid-template-columns:1fr}.rail .karaoke-demo{display:none}.rail .karaoke-title{font-size:.88rem}.rail .karaoke-artist{font-size:.78rem}
+@media(max-width:1180px){.karaoke-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:820px){.karaoke-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.karaoke-info{padding:11px}.karaoke-actions{grid-template-columns:1fr}.karaoke-card{border-radius:14px}}

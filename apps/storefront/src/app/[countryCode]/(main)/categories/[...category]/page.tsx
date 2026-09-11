@@ -19,7 +19,15 @@ type Props = {
   >
 }
 
+export const dynamicParams = true
+
 export async function generateStaticParams() {
+  // El preview TOP PERÚ funciona sin Medusa: no intentamos consultar
+  // categorías/regiones durante el build. La home /pe usa el JSON local.
+  if (process.env.NEXT_PUBLIC_STOREFRONT_PREVIEW === "1") {
+    return []
+  }
+
   const product_categories = await listCategories()
 
   if (!product_categories) {

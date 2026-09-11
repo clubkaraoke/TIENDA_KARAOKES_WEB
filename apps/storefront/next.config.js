@@ -14,6 +14,7 @@ const BASE_PATH = (process.env.NEXT_PUBLIC_BASE_PATH || "").trim().replace(/\/$/
  */
 const nextConfig = {
   reactStrictMode: true,
+  output: "standalone",
   ...(BASE_PATH ? { basePath: BASE_PATH } : {}),
   logging: {
     fetches: {

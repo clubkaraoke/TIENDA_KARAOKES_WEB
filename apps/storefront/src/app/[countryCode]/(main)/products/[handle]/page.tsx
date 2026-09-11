@@ -10,7 +10,13 @@ type Props = {
   searchParams: Promise<{ v_id?: string }>
 }
 
+export const dynamicParams = true
+
 export async function generateStaticParams() {
+  if (process.env.NEXT_PUBLIC_STOREFRONT_PREVIEW === "1") {
+    return []
+  }
+
   try {
     const countryCodes = await listRegions().then((regions) =>
       regions?.map((r) => r.countries?.map((c) => c.iso_2)).flat()

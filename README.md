@@ -2,6 +2,14 @@
 
 Nueva tienda digital de karaokes de Club Karaoke / DJGABO.
 
+## Handoff actual — leer primero
+
+Antes de continuar la implementación, leer:
+
+- [`docs/00_HANDOFF_BUYKARAOKE_MEDUSA_TOP_PERU.md`](docs/00_HANDOFF_BUYKARAOKE_MEDUSA_TOP_PERU.md)
+
+Ese documento contiene las decisiones aprobadas de UX inspirada en BuyKaraokeDownloads y el contrato de integración con el flujo TOP PERÚ / OVH / CDG_PLAYER_ONLINE ya resuelto.
+
 ## Objetivo
 
 Construir una tienda independiente con:

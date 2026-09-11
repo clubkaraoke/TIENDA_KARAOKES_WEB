@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 jobs:
-  typecheck:
+  validate:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -48,3 +48,13 @@ jobs:
           console.log(`CATALOG_ITEMS=${data.items.length}`)
           console.log(`SMOKE_ID=${smoke.id}`)
           NODE
+
+      - name: Next production build
+        env:
+          NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY: pk_test_ci_validation
+          NEXT_PUBLIC_MEDUSA_BACKEND_URL: http://127.0.0.1:9000
+          NEXT_PUBLIC_BASE_URL: http://127.0.0.1:8000
+          NEXT_PUBLIC_DEFAULT_REGION: pe
+          NEXT_PUBLIC_TOP_PERU_DEMO_API_BASE: https://example.invalid
+          NEXT_PUBLIC_CDG_PLAYER_URL: https://example.invalid/player
+        run: npm run build

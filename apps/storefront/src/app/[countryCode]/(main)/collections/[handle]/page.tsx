@@ -20,8 +20,13 @@ type Props = {
 }
 
 export const PRODUCT_LIMIT = 12
+export const dynamicParams = true
 
 export async function generateStaticParams() {
+  if (process.env.NEXT_PUBLIC_STOREFRONT_PREVIEW === "1") {
+    return []
+  }
+
   const { collections } = await listCollections({
     fields: "*products",
   })

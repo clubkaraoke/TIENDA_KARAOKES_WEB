@@ -1,0 +1,50 @@
+name: Validate TOP PERU storefront
+
+on:
+  push:
+    branches:
+      - feature/buykaraoke-medusa-top-peru-frontend-20260911
+    paths:
+      - "apps/storefront/**"
+      - ".github/workflows/validate-top-peru-storefront.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/storefront
+
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.19.0"
+
+      - name: Install storefront dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: TypeScript check
+        run: npx tsc --noEmit
+
+      - name: Verify TOP PERU catalog is bundled
+        run: |
+          test -s public/data/catalogo-karaoke.json
+          node - <<'NODE'
+          const fs = require('fs')
+          const data = JSON.parse(fs.readFileSync('public/data/catalogo-karaoke.json', 'utf8'))
+          if (!Array.isArray(data.items) || data.items.length < 2800) {
+            throw new Error(`Catalog incomplete: ${data.items?.length ?? 0}`)
+          }
+          const smoke = data.items.find((item) => item.id === 'DJG-1K54WE5')
+          if (!smoke) throw new Error('DJG-1K54WE5 not found')
+          console.log(`CATALOG_ITEMS=${data.items.length}`)
+          console.log(`SMOKE_ID=${smoke.id}`)
+          NODE

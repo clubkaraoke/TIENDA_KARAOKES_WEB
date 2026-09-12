@@ -1,0 +1,9 @@
+node_modules
+.medusa
+.env
+.env.*
+coverage
+npm-debug.log*
+yarn-error.log*
+.git
+.github

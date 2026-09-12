@@ -56,7 +56,8 @@ services:
     ports:
       - "127.0.0.1:${MEDUSA_HOST_PORT:-9010}:9000"
     volumes:
-      - djgabo_medusa_uploads:/app/static
+      - ./.env.medusa:/app/.medusa/server/.env.production:ro
+      - djgabo_medusa_uploads:/app/.medusa/server/static
     networks:
       - djgabo_medusa_net
 

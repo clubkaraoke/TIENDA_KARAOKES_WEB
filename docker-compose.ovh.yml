@@ -1,0 +1,70 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: djgabo-medusa-postgres
+    restart: unless-stopped
+    env_file:
+      - .env.medusa
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - djgabo_medusa_pg:/var/lib/postgresql/data
+    networks:
+      - djgabo_medusa_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    container_name: djgabo-medusa-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - djgabo_medusa_redis:/data
+    networks:
+      - djgabo_medusa_net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  backend:
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile.ovh
+    container_name: djgabo-medusa-backend
+    restart: unless-stopped
+    env_file:
+      - .env.medusa
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 9000
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${MEDUSA_HOST_PORT:-9010}:9000"
+    volumes:
+      - djgabo_medusa_uploads:/app/static
+    networks:
+      - djgabo_medusa_net
+
+volumes:
+  djgabo_medusa_pg:
+  djgabo_medusa_redis:
+  djgabo_medusa_uploads:
+
+networks:
+  djgabo_medusa_net:
+    name: djgabo_medusa_net

@@ -15,7 +15,11 @@ ENV NODE_ENV=production
 ENV HOST=0.0.0.0
 ENV PORT=9000
 
-RUN npm run build
+RUN npm run build \
+  && cd /app/.medusa/server \
+  && npm install --legacy-peer-deps --omit=dev --no-audit --no-fund
+
+WORKDIR /app/.medusa/server
 
 EXPOSE 9000
 

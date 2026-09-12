@@ -23,10 +23,19 @@
   },
   "dependencies": {
     "@medusajs/admin-sdk": "2.14.0",
+    "@medusajs/admin-shared": "2.14.0",
+    "@medusajs/caching": "2.14.0",
     "@medusajs/cli": "2.14.0",
+    "@medusajs/dashboard": "2.14.0",
+    "@medusajs/draft-order": "2.14.0",
     "@medusajs/framework": "2.14.0",
     "@medusajs/medusa": "2.14.0",
-    "multer": "^1.4.5-lts.1"
+    "@medusajs/ui": "4.1.7",
+    "@tanstack/react-query": "5.64.2",
+    "multer": "^1.4.5-lts.1",
+    "react-i18next": "13.5.0",
+    "react-router-dom": "6.30.3",
+    "zod": "4.2.0"
   },
   "devDependencies": {
     "@medusajs/test-utils": "2.14.0",

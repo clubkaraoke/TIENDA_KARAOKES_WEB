@@ -1,3 +1,5 @@
+import { setDefaultResultOrder } from "node:dns"
+
 export type DjgaboTariff = {
   cantidad: number
   precioTotal: number
@@ -96,6 +98,14 @@ export async function fetchDjgaboPublicTariff(
   } = {}
 ): Promise<DjgaboTariff> {
   const fetchImpl = options.fetchImpl || fetch
+
+  // Google publishes IPv4 + IPv6. The OVH Docker network currently has working
+  // IPv4 but unusable IPv6; native fetch can otherwise stall until AbortController.
+  // Scope the preference to real network calls so injected unit-test fetches stay pure.
+  if (fetchImpl === fetch) {
+    setDefaultResultOrder("ipv4first")
+  }
+
   const pricingApiUrl =
     options.pricingApiUrl ||
     process.env.DJGABO_PRICING_API_URL ||

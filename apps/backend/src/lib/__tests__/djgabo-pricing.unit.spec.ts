@@ -1,7 +1,41 @@
 import {
+  djgaboSkuFromSongKey,
+  normalizeDjgaboSongKey,
+} from "../djgabo-catalog"
+import {
   allocateTierTotal,
   selectDjgaboTariff,
 } from "../djgabo-pricing"
+
+describe("DJGABO catalog identity", () => {
+  it("normalizes accents, case and whitespace deterministically", () => {
+    expect(normalizeDjgaboSongKey("  Amé   Una Vez :: Agustín Lara  ")).toBe(
+      "ame una vez :: agustin lara"
+    )
+  })
+
+  it.each([
+    [
+      "Alza Tu Mano Y Pide La Palabra :: Maria Yfeu",
+      "DJGABO-B7141398907E42C8A0AA",
+    ],
+    ["Amé Una Vez :: Agustín Lara", "DJGABO-31431D8DCA01EFCF7BCA"],
+    [
+      "El Hombre Que Más Te Amó :: Vicente Fernández",
+      "DJGABO-06F8F96607073C5A68C7",
+    ],
+    [
+      "Enterram3 En El Après Maríe :: Leiva",
+      "DJGABO-D1EF8C0ACA57B034C08B",
+    ],
+    [
+      "La Sencillita :: Christian Herrera Y Matacos",
+      "DJGABO-04D474F5C252ECA20372",
+    ],
+  ])("maps %s to its canonical SKU", (songKey, expectedSku) => {
+    expect(djgaboSkuFromSongKey(songKey)).toBe(expectedSku)
+  })
+})
 
 describe("DJGABO tier pricing", () => {
   describe("allocateTierTotal", () => {

@@ -1,3 +1,5 @@
+import { setDefaultResultOrder } from "node:dns"
+
 export type DjgaboWebPromo = {
   active: boolean
   segment: string
@@ -175,6 +177,13 @@ export async function fetchDjgaboPublicWebPromo(
   const segment = PUBLIC_SEGMENT
   const linkWeb = normalizeDjgaboPromoLinkSlug(options.linkWeb || "")
   const fetchImpl = options.fetchImpl || fetch
+
+  // Same OVH Docker constraint as pricing: IPv4 works, container IPv6 does not.
+  // Prefer IPv4 only for the native network client; mocked tests remain untouched.
+  if (fetchImpl === fetch) {
+    setDefaultResultOrder("ipv4first")
+  }
+
   const promoApiUrl =
     options.promoApiUrl ||
     process.env.DJGABO_PROMO_API_URL ||

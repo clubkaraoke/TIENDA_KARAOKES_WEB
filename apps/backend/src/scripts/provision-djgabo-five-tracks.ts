@@ -5,12 +5,12 @@ import {
   ProductStatus,
 } from "@medusajs/framework/utils"
 import { createProductsWorkflow } from "@medusajs/medusa/core-flows"
+import { djgaboSkuFromSongKey } from "../lib/djgabo-catalog"
 import { DIGITAL_PRODUCT_MODULE } from "../modules/digital-product"
 import DigitalProductModuleService from "../modules/digital-product/service"
 
 type Track = {
   songKey: string
-  sku: string
   title: string
   artist: string
   driveId: string
@@ -19,35 +19,30 @@ type Track = {
 const TRACKS: Track[] = [
   {
     songKey: "Alza Tu Mano Y Pide La Palabra :: Maria Yfeu",
-    sku: "DJGABO-8FB91920052EB17A9A23",
     title: "Alza Tu Mano Y Pide La Palabra",
     artist: "Maria Yfeu",
     driveId: "1MQAA-gRfZRipqeADNKoJSeMNqrmmadWI",
   },
   {
     songKey: "Amé Una Vez :: Agustín Lara",
-    sku: "DJGABO-AD2E2C4846194E3C47C0",
     title: "Amé Una Vez",
     artist: "Agustín Lara",
     driveId: "1kQEBZqj-yWaDOFkJA0FB_S7ETAsC0UUy",
   },
   {
     songKey: "El Hombre Que Más Te Amó :: Vicente Fernández",
-    sku: "DJGABO-5BE261DA8C63ACFC184F",
     title: "El Hombre Que Más Te Amó",
     artist: "Vicente Fernández",
     driveId: "1lzILSIvXg56IpE-v-5TKrRplPdhkZiXk",
   },
   {
     songKey: "Enterram3 En El Après Maríe :: Leiva",
-    sku: "DJGABO-9DA4A0FAEA1583D96C6C",
     title: "Enterram3 En El Après Maríe",
     artist: "Leiva",
     driveId: "1bnkA4f75MEUsFxi-xOXD_cg5obfpNsCr",
   },
   {
     songKey: "La Sencillita :: Christian Herrera Y Matacos",
-    sku: "DJGABO-07117112562316112A18",
     title: "La Sencillita",
     artist: "Christian Herrera Y Matacos",
     driveId: "1J-CtYUiI7NDE2pDhwFfOPqvhFgf8Pb_h",
@@ -93,14 +88,15 @@ export default async function provisionDjgaboFiveTracks({ container }: ExecArgs)
   logger.info("Provisioning exactly five DJGABO real tracks...")
 
   for (const track of TRACKS) {
+    const sku = djgaboSkuFromSongKey(track.songKey)
     const { data: found } = await query.graph({
       entity: "variant",
       fields: ["id", "sku", "metadata", "digital_product.id"],
-      filters: { sku: track.sku },
+      filters: { sku },
     })
 
     if (found.length > 1) {
-      throw new Error(`Duplicate SKU detected before provisioning: ${track.sku}`)
+      throw new Error(`Duplicate SKU detected before provisioning: ${sku}`)
     }
 
     if (found.length === 1) {
@@ -113,10 +109,10 @@ export default async function provisionDjgaboFiveTracks({ container }: ExecArgs)
         !variant.digital_product?.id
       ) {
         throw new Error(
-          `Existing SKU is incomplete or mismatched; refusing to mutate: ${track.sku}`
+          `Existing SKU is incomplete or mismatched; refusing to mutate: ${sku}`
         )
       }
-      logger.info(`EXISTS_OK ${track.sku}`)
+      logger.info(`EXISTS_OK ${sku}`)
       continue
     }
 
@@ -126,7 +122,7 @@ export default async function provisionDjgaboFiveTracks({ container }: ExecArgs)
           {
             title: track.title,
             subtitle: track.artist,
-            handle: `djgabo-${track.sku.toLowerCase()}`,
+            handle: `djgabo-${sku.toLowerCase()}`,
             status: ProductStatus.PUBLISHED,
             shipping_profile_id: shippingProfileId,
             metadata: {
@@ -144,7 +140,7 @@ export default async function provisionDjgaboFiveTracks({ container }: ExecArgs)
             variants: [
               {
                 title: "Pista Digital",
-                sku: track.sku,
+                sku,
                 options: { Formato: "Pista Digital" },
                 manage_inventory: false,
                 metadata: {
@@ -169,7 +165,7 @@ export default async function provisionDjgaboFiveTracks({ container }: ExecArgs)
 
     const variant = products[0]?.variants?.[0]
     if (!variant?.id) {
-      throw new Error(`Product was created without a variant: ${track.sku}`)
+      throw new Error(`Product was created without a variant: ${sku}`)
     }
 
     const digitalProduct = await digitalProductService.createDigitalProducts({
@@ -185,10 +181,10 @@ export default async function provisionDjgaboFiveTracks({ container }: ExecArgs)
       },
     })
 
-    logger.info(`CREATED_OK ${track.sku}`)
+    logger.info(`CREATED_OK ${sku}`)
   }
 
-  const skus = TRACKS.map((track) => track.sku)
+  const skus = TRACKS.map((track) => djgaboSkuFromSongKey(track.songKey))
   const { data: verified } = await query.graph({
     entity: "variant",
     fields: [
@@ -210,7 +206,8 @@ export default async function provisionDjgaboFiveTracks({ container }: ExecArgs)
   }
 
   for (const track of TRACKS) {
-    const variant = verified.find((item) => item.sku === track.sku)
+    const sku = djgaboSkuFromSongKey(track.songKey)
+    const variant = verified.find((item) => item.sku === sku)
     const metadata = (variant?.metadata || {}) as Record<string, unknown>
     if (
       !variant?.digital_product?.id ||
@@ -218,7 +215,7 @@ export default async function provisionDjgaboFiveTracks({ container }: ExecArgs)
       metadata.djgabo_song_key !== track.songKey ||
       metadata.djgabo_drive_id !== track.driveId
     ) {
-      throw new Error(`Verification failed for ${track.sku}`)
+      throw new Error(`Verification failed for ${sku}`)
     }
   }
 

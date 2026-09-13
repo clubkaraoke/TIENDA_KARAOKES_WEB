@@ -32,7 +32,7 @@ jobs:
           cache-dependency-path: apps/backend/yarn.lock
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --non-interactive
 
       - name: Run DJGABO unit tests
         run: yarn test:unit src/lib/__tests__/djgabo-pricing.unit.spec.ts src/lib/__tests__/djgabo-promo.unit.spec.ts

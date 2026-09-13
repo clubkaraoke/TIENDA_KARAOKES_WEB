@@ -1,4 +1,4 @@
-import { setDefaultResultOrder } from "node:dns"
+import { getDjgaboJsonIpv4 } from "./djgabo-http-ipv4"
 
 export type DjgaboTariff = {
   cantidad: number
@@ -77,14 +77,22 @@ export function selectDjgaboTariff(
 }
 
 function isRetryablePricingFetchError(error: unknown): boolean {
-  if (error && typeof error === "object" && "name" in error) {
-    const name = String((error as { name?: unknown }).name || "")
+  if (error && typeof error === "object") {
+    const name = "name" in error
+      ? String((error as { name?: unknown }).name || "")
+      : ""
     if (name === "AbortError" || name === "TimeoutError") {
+      return true
+    }
+
+    const code = "code" in error
+      ? String((error as { code?: unknown }).code || "")
+      : ""
+    if (["ECONNRESET", "ETIMEDOUT", "EAI_AGAIN", "ENETUNREACH", "ECONNREFUSED"].includes(code)) {
       return true
     }
   }
 
-  // Native fetch uses TypeError for network failures (DNS, socket reset, etc.).
   return error instanceof TypeError
 }
 
@@ -97,21 +105,11 @@ export async function fetchDjgaboPublicTariff(
     maxAttempts?: number
   } = {}
 ): Promise<DjgaboTariff> {
-  const fetchImpl = options.fetchImpl || fetch
-
-  // Google publishes IPv4 + IPv6. The OVH Docker network currently has working
-  // IPv4 but unusable IPv6; native fetch can otherwise stall until AbortController.
-  // Scope the preference to real network calls so injected unit-test fetches stay pure.
-  if (fetchImpl === fetch) {
-    setDefaultResultOrder("ipv4first")
-  }
-
+  const fetchImpl = options.fetchImpl
   const pricingApiUrl =
     options.pricingApiUrl ||
     process.env.DJGABO_PRICING_API_URL ||
     DEFAULT_DJGABO_PRICING_API_URL
-  // Apps Script can cold-start above the old 8 s limit. Keep the request bounded,
-  // but allow one safe retry because this endpoint is a read-only GET.
   const timeoutMs = options.timeoutMs ?? 15000
   const maxAttempts = options.maxAttempts ?? 2
 
@@ -127,31 +125,56 @@ export async function fetchDjgaboPublicTariff(
     url.searchParams.set("segmento", "PUBLICO")
     url.searchParams.set("v", `${Date.now()}-${attempt}`)
 
-    const controller = new AbortController()
-    const timer = setTimeout(() => controller.abort(), timeoutMs)
+    let timer: ReturnType<typeof setTimeout> | undefined
 
     try {
-      const response = await fetchImpl(url, {
-        method: "GET",
-        headers: {
-          accept: "application/json",
-          "user-agent": "DJGABO-Medusa-Pricing/1.0",
-        },
-        cache: "no-store",
-        signal: controller.signal,
-      })
+      let status: number
+      let ok: boolean
+      let payload: DjgaboPricingPayload
 
-      if (!response.ok) {
-        const error = new Error(`DJGABO pricing API HTTP ${response.status}`)
+      if (fetchImpl) {
+        const controller = new AbortController()
+        timer = setTimeout(() => controller.abort(), timeoutMs)
+        const response = await fetchImpl(url, {
+          method: "GET",
+          headers: {
+            accept: "application/json",
+            "user-agent": "DJGABO-Medusa-Pricing/1.0",
+          },
+          cache: "no-store",
+          signal: controller.signal,
+        })
+        status = response.status
+        ok = response.ok
+        payload = (ok ? await response.json() : {}) as DjgaboPricingPayload
+      } else {
+        // OVH Docker has unreliable IPv6/undici routing to Apps Script. The
+        // native production path therefore uses HTTPS explicitly pinned to IPv4.
+        const response = await getDjgaboJsonIpv4(url, {
+          timeoutMs,
+          headers: {
+            accept: "application/json",
+            "user-agent": "DJGABO-Medusa-Pricing/1.0",
+          },
+        })
+        status = response.status
+        ok = response.ok
+        if (ok && response.payload === undefined) {
+          throw new TypeError("DJGABO pricing API returned invalid JSON")
+        }
+        payload = (response.payload || {}) as DjgaboPricingPayload
+      }
+
+      if (!ok) {
+        const error = new Error(`DJGABO pricing API HTTP ${status}`)
         lastError = error
-        const retryableStatus = response.status === 429 || response.status >= 500
+        const retryableStatus = status === 429 || status >= 500
         if (retryableStatus && attempt < maxAttempts) {
           continue
         }
         throw error
       }
 
-      const payload = (await response.json()) as DjgaboPricingPayload
       return selectDjgaboTariff(payload, paidCount)
     } catch (error) {
       lastError = error
@@ -159,7 +182,7 @@ export async function fetchDjgaboPublicTariff(
         throw error
       }
     } finally {
-      clearTimeout(timer)
+      if (timer) clearTimeout(timer)
     }
   }
 

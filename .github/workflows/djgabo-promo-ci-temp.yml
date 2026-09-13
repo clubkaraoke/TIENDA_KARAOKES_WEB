@@ -1,0 +1,41 @@
+name: DJGABO Promo CI Temporary
+
+on:
+  push:
+    branches:
+      - integration/djgabo-tier-pricing-20260913
+    paths:
+      - 'apps/backend/src/lib/djgabo-promo.ts'
+      - 'apps/backend/src/lib/__tests__/djgabo-promo.unit.spec.ts'
+      - 'apps/backend/src/lib/__tests__/djgabo-pricing.unit.spec.ts'
+      - 'apps/backend/src/api/store/carts/[id]/djgabo-tier-items/route.ts'
+      - '.github/workflows/djgabo-promo-ci-temp.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: apps/backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+          cache-dependency-path: apps/backend/yarn.lock
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Run DJGABO unit tests
+        run: yarn test:unit src/lib/__tests__/djgabo-pricing.unit.spec.ts src/lib/__tests__/djgabo-promo.unit.spec.ts
+
+      - name: Build Medusa backend
+        run: yarn build

@@ -10,11 +10,11 @@ import { addToCartWorkflow } from "@medusajs/medusa/core-flows"
 import {
   djgaboSkuFromSongKey,
   normalizeDjgaboSongKey,
-} from "../../../../../../lib/djgabo-catalog"
+} from "../../../../../lib/djgabo-catalog"
 import {
   allocateTierTotal,
   fetchDjgaboPublicTariff,
-} from "../../../../../../lib/djgabo-pricing"
+} from "../../../../../lib/djgabo-pricing"
 
 type DjgaboTierCartBody = {
   items: Array<{

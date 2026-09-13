@@ -8,17 +8,21 @@ import {
 } from "@medusajs/framework/utils"
 import { addToCartWorkflow } from "@medusajs/medusa/core-flows"
 import {
+  djgaboSkuFromSongKey,
+  normalizeDjgaboSongKey,
+} from "../../../../../../lib/djgabo-catalog"
+import {
   allocateTierTotal,
   fetchDjgaboPublicTariff,
 } from "../../../../../../lib/djgabo-pricing"
 
 type DjgaboTierCartBody = {
   items: Array<{
-    variant_id: string
+    song_key: string
   }>
 }
 
-const badRequest = (message: string) => {
+const badRequest = (message: string): never => {
   throw new MedusaError(MedusaError.Types.INVALID_DATA, message)
 }
 
@@ -36,16 +40,23 @@ export const POST = async (
     badRequest("DJGABO tier cart is limited to 50 paid tracks")
   }
 
-  const variantIds = requestedItems.map((item) => String(item?.variant_id || "").trim())
+  const songKeys = requestedItems.map((item) => {
+    try {
+      return normalizeDjgaboSongKey(item?.song_key || "")
+    } catch {
+      return ""
+    }
+  })
 
-  if (variantIds.some((id) => !id)) {
-    badRequest("Every DJGABO cart item requires variant_id")
+  if (songKeys.some((key) => !key)) {
+    badRequest("Every DJGABO cart item requires song_key")
   }
 
-  if (new Set(variantIds).size !== variantIds.length) {
+  if (new Set(songKeys).size !== songKeys.length) {
     badRequest("The same DJGABO track cannot be added twice")
   }
 
+  const skus = songKeys.map(djgaboSkuFromSongKey)
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
 
   const {
@@ -71,22 +82,30 @@ export const POST = async (
 
   const { data: variants } = await query.graph({
     entity: "variant",
-    fields: ["id", "metadata", "digital_product.id"],
-    filters: { id: variantIds },
+    fields: ["id", "sku", "metadata", "digital_product.id"],
+    filters: { sku: skus },
   })
 
-  if (variants.length !== variantIds.length) {
-    badRequest("One or more DJGABO variants do not exist")
+  if (variants.length !== songKeys.length) {
+    badRequest("One or more DJGABO tracks are not mapped in Medusa")
   }
 
-  const variantsById = new Map(variants.map((variant) => [variant.id, variant]))
+  const variantsBySku = new Map(variants.map((variant) => [variant.sku, variant]))
 
-  for (const variantId of variantIds) {
-    const variant = variantsById.get(variantId)
+  for (let index = 0; index < songKeys.length; index++) {
+    const sku = skus[index]
+    const variant = variantsBySku.get(sku)
     const metadata = (variant?.metadata || {}) as Record<string, unknown>
 
     if (metadata.djgabo_source !== "TIENDA_PISTAS_WEB") {
       badRequest("A requested variant does not belong to TIENDA_PISTAS_WEB")
+    }
+
+    if (
+      normalizeDjgaboSongKey(String(metadata.djgabo_song_key || "")) !==
+      songKeys[index]
+    ) {
+      badRequest("DJGABO song identity mismatch")
     }
 
     if (!variant?.digital_product?.id) {
@@ -94,21 +113,21 @@ export const POST = async (
     }
   }
 
-  const paidCount = variantIds.length
+  const paidCount = songKeys.length
   const tariff = await fetchDjgaboPublicTariff(paidCount)
   const allocatedPrices = allocateTierTotal(tariff.precioTotal, paidCount)
 
-  const items = variantIds.map((variantId, index) => {
-    const variant = variantsById.get(variantId)!
+  const items = songKeys.map((songKey, index) => {
+    const variant = variantsBySku.get(skus[index])!
     const variantMetadata = (variant.metadata || {}) as Record<string, unknown>
 
     return {
-      variant_id: variantId,
+      variant_id: variant.id,
       quantity: 1,
       unit_price: allocatedPrices[index],
       metadata: {
         djgabo_source: "TIENDA_PISTAS_WEB",
-        djgabo_song_key: variantMetadata.djgabo_song_key,
+        djgabo_song_key: songKey,
         djgabo_drive_id: variantMetadata.djgabo_drive_id,
         djgabo_pricing_source: "06_PRECIOS_WEB",
         djgabo_paid_count: paidCount,

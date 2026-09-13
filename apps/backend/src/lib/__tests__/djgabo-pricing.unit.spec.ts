@@ -4,6 +4,7 @@ import {
 } from "../djgabo-catalog"
 import {
   allocateTierTotal,
+  fetchDjgaboPublicTariff,
   selectDjgaboTariff,
 } from "../djgabo-pricing"
 
@@ -86,6 +87,88 @@ describe("DJGABO tier pricing", () => {
           2
         )
       ).toThrow("Invalid DJGABO total")
+    })
+  })
+
+  describe("fetchDjgaboPublicTariff", () => {
+    const goodPayload = {
+      ok: true,
+      tarifas: [
+        { cantidad: 1, precioTotal: 15 },
+        { cantidad: 2, precioTotal: 25 },
+        { cantidad: 3, precioTotal: 32 },
+      ],
+    }
+
+    const okResponse = () =>
+      ({
+        ok: true,
+        status: 200,
+        json: async () => goodPayload,
+      }) as Response
+
+    it("retries one transient timeout and then returns the live tier", async () => {
+      let calls = 0
+      const fetchImpl = jest.fn(async () => {
+        calls += 1
+        if (calls === 1) {
+          const error = new Error("aborted")
+          error.name = "AbortError"
+          throw error
+        }
+        return okResponse()
+      }) as unknown as typeof fetch
+
+      await expect(
+        fetchDjgaboPublicTariff(3, {
+          fetchImpl,
+          pricingApiUrl: "https://example.invalid/pricing",
+          timeoutMs: 100,
+          maxAttempts: 2,
+        })
+      ).resolves.toMatchObject({ cantidad: 3, precioTotal: 32 })
+
+      expect(calls).toBe(2)
+    })
+
+    it("retries a transient 5xx response and then succeeds", async () => {
+      let calls = 0
+      const fetchImpl = jest.fn(async () => {
+        calls += 1
+        if (calls === 1) {
+          return {
+            ok: false,
+            status: 503,
+            json: async () => ({}),
+          } as Response
+        }
+        return okResponse()
+      }) as unknown as typeof fetch
+
+      await expect(
+        fetchDjgaboPublicTariff(2, {
+          fetchImpl,
+          pricingApiUrl: "https://example.invalid/pricing",
+          timeoutMs: 100,
+          maxAttempts: 2,
+        })
+      ).resolves.toMatchObject({ cantidad: 2, precioTotal: 25 })
+
+      expect(calls).toBe(2)
+    })
+
+    it("rejects unsafe retry counts before making a request", async () => {
+      const fetchImpl = jest.fn(async () => okResponse()) as unknown as typeof fetch
+
+      await expect(
+        fetchDjgaboPublicTariff(1, {
+          fetchImpl,
+          pricingApiUrl: "https://example.invalid/pricing",
+          maxAttempts: 4,
+        })
+      ).rejects.toThrow("maxAttempts must be between 1 and 3")
+
+      expect(fetchImpl).not.toHaveBeenCalled()
     })
   })
 })

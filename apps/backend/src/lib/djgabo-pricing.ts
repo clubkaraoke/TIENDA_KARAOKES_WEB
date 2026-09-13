@@ -74,12 +74,25 @@ export function selectDjgaboTariff(
   }
 }
 
+function isRetryablePricingFetchError(error: unknown): boolean {
+  if (error && typeof error === "object" && "name" in error) {
+    const name = String((error as { name?: unknown }).name || "")
+    if (name === "AbortError" || name === "TimeoutError") {
+      return true
+    }
+  }
+
+  // Native fetch uses TypeError for network failures (DNS, socket reset, etc.).
+  return error instanceof TypeError
+}
+
 export async function fetchDjgaboPublicTariff(
   paidCount: number,
   options: {
     fetchImpl?: typeof fetch
     pricingApiUrl?: string
     timeoutMs?: number
+    maxAttempts?: number
   } = {}
 ): Promise<DjgaboTariff> {
   const fetchImpl = options.fetchImpl || fetch
@@ -87,34 +100,60 @@ export async function fetchDjgaboPublicTariff(
     options.pricingApiUrl ||
     process.env.DJGABO_PRICING_API_URL ||
     DEFAULT_DJGABO_PRICING_API_URL
-  const timeoutMs = options.timeoutMs ?? 8000
+  // Apps Script can cold-start above the old 8 s limit. Keep the request bounded,
+  // but allow one safe retry because this endpoint is a read-only GET.
+  const timeoutMs = options.timeoutMs ?? 15000
+  const maxAttempts = options.maxAttempts ?? 2
 
-  const url = new URL(pricingApiUrl)
-  url.searchParams.set("tipo", "precios_web")
-  url.searchParams.set("segmento", "PUBLICO")
-  url.searchParams.set("v", Date.now().toString())
-
-  const controller = new AbortController()
-  const timer = setTimeout(() => controller.abort(), timeoutMs)
-
-  try {
-    const response = await fetchImpl(url, {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-        "user-agent": "DJGABO-Medusa-Pricing/1.0",
-      },
-      cache: "no-store",
-      signal: controller.signal,
-    })
-
-    if (!response.ok) {
-      throw new Error(`DJGABO pricing API HTTP ${response.status}`)
-    }
-
-    const payload = (await response.json()) as DjgaboPricingPayload
-    return selectDjgaboTariff(payload, paidCount)
-  } finally {
-    clearTimeout(timer)
+  if (!Number.isSafeInteger(maxAttempts) || maxAttempts < 1 || maxAttempts > 3) {
+    throw new Error("DJGABO pricing maxAttempts must be between 1 and 3")
   }
+
+  let lastError: unknown = null
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    const url = new URL(pricingApiUrl)
+    url.searchParams.set("tipo", "precios_web")
+    url.searchParams.set("segmento", "PUBLICO")
+    url.searchParams.set("v", `${Date.now()}-${attempt}`)
+
+    const controller = new AbortController()
+    const timer = setTimeout(() => controller.abort(), timeoutMs)
+
+    try {
+      const response = await fetchImpl(url, {
+        method: "GET",
+        headers: {
+          accept: "application/json",
+          "user-agent": "DJGABO-Medusa-Pricing/1.0",
+        },
+        cache: "no-store",
+        signal: controller.signal,
+      })
+
+      if (!response.ok) {
+        const error = new Error(`DJGABO pricing API HTTP ${response.status}`)
+        lastError = error
+        const retryableStatus = response.status === 429 || response.status >= 500
+        if (retryableStatus && attempt < maxAttempts) {
+          continue
+        }
+        throw error
+      }
+
+      const payload = (await response.json()) as DjgaboPricingPayload
+      return selectDjgaboTariff(payload, paidCount)
+    } catch (error) {
+      lastError = error
+      if (!isRetryablePricingFetchError(error) || attempt >= maxAttempts) {
+        throw error
+      }
+    } finally {
+      clearTimeout(timer)
+    }
+  }
+
+  throw lastError instanceof Error
+    ? lastError
+    : new Error("DJGABO pricing API request failed")
 }

@@ -1,4 +1,4 @@
-import { setDefaultResultOrder } from "node:dns"
+import { getDjgaboJsonIpv4 } from "./djgabo-http-ipv4"
 
 export type DjgaboWebPromo = {
   active: boolean
@@ -28,9 +28,7 @@ function firstValue(payload: DjgaboPromoPayload, keys: string[]): unknown {
 }
 
 function isPromoActive(value: unknown): boolean {
-  if (value === true) {
-    return true
-  }
+  if (value === true) return true
 
   const normalized = String(value || "")
     .trim()
@@ -49,37 +47,37 @@ function parseRequiredPromoInteger(
 ): number {
   const raw = firstValue(payload, keys)
   const parsed = Number(String(raw ?? "").replace(",", "."))
-
   if (!Number.isSafeInteger(parsed) || parsed < minimum) {
     throw new Error(`Invalid DJGABO PROMOS WEB ${label}`)
   }
-
   return parsed
 }
 
 function isRetryablePromoFetchError(error: unknown): boolean {
-  if (error && typeof error === "object" && "name" in error) {
-    const name = String((error as { name?: unknown }).name || "")
-    if (name === "AbortError" || name === "TimeoutError") {
+  if (error && typeof error === "object") {
+    const name = "name" in error
+      ? String((error as { name?: unknown }).name || "")
+      : ""
+    if (name === "AbortError" || name === "TimeoutError") return true
+
+    const code = "code" in error
+      ? String((error as { code?: unknown }).code || "")
+      : ""
+    if (["ECONNRESET", "ETIMEDOUT", "EAI_AGAIN", "ENETUNREACH", "ECONNREFUSED"].includes(code)) {
       return true
     }
   }
-
   return error instanceof TypeError
 }
 
 export function normalizeDjgaboPromoLinkSlug(value: unknown): string {
   const raw = String(value || "").trim()
-  if (!raw) {
-    return ""
-  }
+  if (!raw) return ""
 
   try {
     const parsed = new URL(raw)
     const querySlug = String(parsed.searchParams.get("p") || "").trim()
-    if (querySlug) {
-      return querySlug.toLowerCase()
-    }
+    if (querySlug) return querySlug.toLowerCase()
 
     const pathSlug = parsed.pathname
       .split("/")
@@ -116,10 +114,7 @@ export function inactiveDjgaboWebPromo(
 
 export function selectDjgaboWebPromo(
   payload: DjgaboPromoPayload,
-  options: {
-    segment?: string
-    linkWeb?: string
-  } = {}
+  options: { segment?: string; linkWeb?: string } = {}
 ): DjgaboWebPromo {
   const segment = String(options.segment || PUBLIC_SEGMENT).toUpperCase()
   const requestedLink = normalizeDjgaboPromoLinkSlug(options.linkWeb || "")
@@ -135,8 +130,6 @@ export function selectDjgaboWebPromo(
     return inactiveDjgaboWebPromo(segment, code, returnedLink || requestedLink)
   }
 
-  // PUBLICO normal uses an empty LINK_WEB. Linked campaigns must match the
-  // exact requested slug, so a blank store visit can never consume a Meta row.
   if (segment === PUBLIC_SEGMENT && returnedLink !== requestedLink) {
     return inactiveDjgaboWebPromo(segment, code, returnedLink)
   }
@@ -176,14 +169,7 @@ export async function fetchDjgaboPublicWebPromo(
 ): Promise<DjgaboWebPromo> {
   const segment = PUBLIC_SEGMENT
   const linkWeb = normalizeDjgaboPromoLinkSlug(options.linkWeb || "")
-  const fetchImpl = options.fetchImpl || fetch
-
-  // Same OVH Docker constraint as pricing: IPv4 works, container IPv6 does not.
-  // Prefer IPv4 only for the native network client; mocked tests remain untouched.
-  if (fetchImpl === fetch) {
-    setDefaultResultOrder("ipv4first")
-  }
-
+  const fetchImpl = options.fetchImpl
   const promoApiUrl =
     options.promoApiUrl ||
     process.env.DJGABO_PROMO_API_URL ||
@@ -202,49 +188,63 @@ export async function fetchDjgaboPublicWebPromo(
     const url = new URL(promoApiUrl)
     url.searchParams.set("tipo", "promo_web")
     url.searchParams.set("segmento", segment)
-    // Mirror TIENDA_PISTAS_WEB exactly: PUBLICO normal omits link_web; linked
-    // campaigns send the slug configured by PROMOS_WEB.
-    if (linkWeb) {
-      url.searchParams.set("link_web", linkWeb)
-    }
+    if (linkWeb) url.searchParams.set("link_web", linkWeb)
     url.searchParams.set("v", `${Date.now()}-${attempt}`)
 
-    const controller = new AbortController()
-    const timer = setTimeout(() => controller.abort(), timeoutMs)
+    let timer: ReturnType<typeof setTimeout> | undefined
 
     try {
-      const response = await fetchImpl(url, {
-        method: "GET",
-        headers: {
-          accept: "application/json",
-          "user-agent": "DJGABO-Medusa-Promo/1.0",
-        },
-        cache: "no-store",
-        signal: controller.signal,
-      })
+      let status: number
+      let ok: boolean
+      let payload: DjgaboPromoPayload
 
-      if (!response.ok) {
-        const error = new Error(`DJGABO PROMOS WEB API HTTP ${response.status}`)
-        lastError = error
-        const retryableStatus = response.status === 429 || response.status >= 500
-        if (retryableStatus && attempt < maxAttempts) {
-          continue
+      if (fetchImpl) {
+        const controller = new AbortController()
+        timer = setTimeout(() => controller.abort(), timeoutMs)
+        const response = await fetchImpl(url, {
+          method: "GET",
+          headers: {
+            accept: "application/json",
+            "user-agent": "DJGABO-Medusa-Promo/1.0",
+          },
+          cache: "no-store",
+          signal: controller.signal,
+        })
+        status = response.status
+        ok = response.ok
+        payload = (ok ? await response.json() : {}) as DjgaboPromoPayload
+      } else {
+        const response = await getDjgaboJsonIpv4(url, {
+          timeoutMs,
+          headers: {
+            accept: "application/json",
+            "user-agent": "DJGABO-Medusa-Promo/1.0",
+          },
+        })
+        status = response.status
+        ok = response.ok
+        if (ok && response.payload === undefined) {
+          throw new TypeError("DJGABO PROMOS WEB API returned invalid JSON")
         }
+        payload = (response.payload || {}) as DjgaboPromoPayload
+      }
+
+      if (!ok) {
+        const error = new Error(`DJGABO PROMOS WEB API HTTP ${status}`)
+        lastError = error
+        const retryableStatus = status === 429 || status >= 500
+        if (retryableStatus && attempt < maxAttempts) continue
         throw error
       }
 
-      const payload = (await response.json()) as DjgaboPromoPayload
-      return selectDjgaboWebPromo(payload, {
-        segment,
-        linkWeb,
-      })
+      return selectDjgaboWebPromo(payload, { segment, linkWeb })
     } catch (error) {
       lastError = error
       if (!isRetryablePromoFetchError(error) || attempt >= maxAttempts) {
         throw error
       }
     } finally {
-      clearTimeout(timer)
+      if (timer) clearTimeout(timer)
     }
   }
 

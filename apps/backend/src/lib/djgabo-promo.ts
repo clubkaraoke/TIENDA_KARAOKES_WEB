@@ -55,6 +55,17 @@ function parseRequiredPromoInteger(
   return parsed
 }
 
+function isRetryablePromoFetchError(error: unknown): boolean {
+  if (error && typeof error === "object" && "name" in error) {
+    const name = String((error as { name?: unknown }).name || "")
+    if (name === "AbortError" || name === "TimeoutError") {
+      return true
+    }
+  }
+
+  return error instanceof TypeError
+}
+
 export function normalizeDjgaboPromoLinkSlug(value: unknown): string {
   const raw = String(value || "").trim()
   if (!raw) {
@@ -122,12 +133,9 @@ export function selectDjgaboWebPromo(
     return inactiveDjgaboWebPromo(segment, code, returnedLink || requestedLink)
   }
 
-  if (
-    segment === PUBLIC_SEGMENT &&
-    requestedLink &&
-    returnedLink &&
-    requestedLink !== returnedLink
-  ) {
+  // PUBLICO normal uses an empty LINK_WEB. Linked campaigns must match the
+  // exact requested slug, so a blank store visit can never consume a Meta row.
+  if (segment === PUBLIC_SEGMENT && returnedLink !== requestedLink) {
     return inactiveDjgaboWebPromo(segment, code, returnedLink)
   }
 
@@ -160,56 +168,78 @@ export async function fetchDjgaboPublicWebPromo(
     fetchImpl?: typeof fetch
     promoApiUrl?: string
     timeoutMs?: number
+    maxAttempts?: number
     linkWeb?: string
   } = {}
 ): Promise<DjgaboWebPromo> {
   const segment = PUBLIC_SEGMENT
   const linkWeb = normalizeDjgaboPromoLinkSlug(options.linkWeb || "")
-
-  // Mirrors TIENDA_PISTAS_WEB: PUBLICO promos are exposed only through ?p=...
-  // when a LINK_WEB campaign is being used. A normal store visit stays clean.
-  if (!linkWeb) {
-    return inactiveDjgaboWebPromo(segment)
-  }
-
   const fetchImpl = options.fetchImpl || fetch
   const promoApiUrl =
     options.promoApiUrl ||
     process.env.DJGABO_PROMO_API_URL ||
     process.env.DJGABO_PRICING_API_URL ||
     DEFAULT_DJGABO_PROMO_API_URL
-  const timeoutMs = options.timeoutMs ?? 8000
+  const timeoutMs = options.timeoutMs ?? 15000
+  const maxAttempts = options.maxAttempts ?? 2
 
-  const url = new URL(promoApiUrl)
-  url.searchParams.set("tipo", "promo_web")
-  url.searchParams.set("segmento", segment)
-  url.searchParams.set("link_web", linkWeb)
-  url.searchParams.set("v", Date.now().toString())
-
-  const controller = new AbortController()
-  const timer = setTimeout(() => controller.abort(), timeoutMs)
-
-  try {
-    const response = await fetchImpl(url, {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-        "user-agent": "DJGABO-Medusa-Promo/1.0",
-      },
-      cache: "no-store",
-      signal: controller.signal,
-    })
-
-    if (!response.ok) {
-      throw new Error(`DJGABO PROMOS WEB API HTTP ${response.status}`)
-    }
-
-    const payload = (await response.json()) as DjgaboPromoPayload
-    return selectDjgaboWebPromo(payload, {
-      segment,
-      linkWeb,
-    })
-  } finally {
-    clearTimeout(timer)
+  if (!Number.isSafeInteger(maxAttempts) || maxAttempts < 1 || maxAttempts > 3) {
+    throw new Error("DJGABO promo maxAttempts must be between 1 and 3")
   }
+
+  let lastError: unknown = null
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    const url = new URL(promoApiUrl)
+    url.searchParams.set("tipo", "promo_web")
+    url.searchParams.set("segmento", segment)
+    // Mirror TIENDA_PISTAS_WEB exactly: PUBLICO normal omits link_web; linked
+    // campaigns send the slug configured by PROMOS_WEB.
+    if (linkWeb) {
+      url.searchParams.set("link_web", linkWeb)
+    }
+    url.searchParams.set("v", `${Date.now()}-${attempt}`)
+
+    const controller = new AbortController()
+    const timer = setTimeout(() => controller.abort(), timeoutMs)
+
+    try {
+      const response = await fetchImpl(url, {
+        method: "GET",
+        headers: {
+          accept: "application/json",
+          "user-agent": "DJGABO-Medusa-Promo/1.0",
+        },
+        cache: "no-store",
+        signal: controller.signal,
+      })
+
+      if (!response.ok) {
+        const error = new Error(`DJGABO PROMOS WEB API HTTP ${response.status}`)
+        lastError = error
+        const retryableStatus = response.status === 429 || response.status >= 500
+        if (retryableStatus && attempt < maxAttempts) {
+          continue
+        }
+        throw error
+      }
+
+      const payload = (await response.json()) as DjgaboPromoPayload
+      return selectDjgaboWebPromo(payload, {
+        segment,
+        linkWeb,
+      })
+    } catch (error) {
+      lastError = error
+      if (!isRetryablePromoFetchError(error) || attempt >= maxAttempts) {
+        throw error
+      }
+    } finally {
+      clearTimeout(timer)
+    }
+  }
+
+  throw lastError instanceof Error
+    ? lastError
+    : new Error("DJGABO PROMOS WEB API request failed")
 }

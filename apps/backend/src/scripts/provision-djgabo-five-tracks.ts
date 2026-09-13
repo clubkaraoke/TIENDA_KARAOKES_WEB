@@ -73,14 +73,17 @@ export default async function provisionDjgaboFiveTracks({ container }: ExecArgs)
     )
   }
 
+  // Audited on the active OVH database: the existing digital shipping profile
+  // is named exactly "Digital". Keep this fail-closed so we never create or
+  // silently select another shipping profile.
   const { data: shippingProfiles } = await query.graph({
     entity: "shipping_profile",
     fields: ["id", "name"],
-    filters: { name: "Digital Shipping Profile" },
+    filters: { name: "Digital" },
   })
   if (shippingProfiles.length !== 1) {
     throw new Error(
-      `Expected exactly one Digital Shipping Profile, got ${shippingProfiles.length}`
+      `Expected exactly one audited Digital shipping profile, got ${shippingProfiles.length}`
     )
   }
 
